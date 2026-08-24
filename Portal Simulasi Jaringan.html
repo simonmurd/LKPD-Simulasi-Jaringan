@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal LKPD Simulasi Jaringan Komputer</title>
+    <!-- CDN Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+</head>
+<body class="bg-slate-900 text-slate-100 min-h-screen font-sans flex flex-col justify-between">
+
+    <!-- Header / Hero Section -->
+    <header class="border-b border-slate-800 bg-slate-900/80 backdrop-blur sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-6 py-6 flex flex-col md:flex-row justify-between items-center gap-4">
+            <div>
+                <span class="text-xs font-semibold tracking-widest text-indigo-400 uppercase">Modul Praktikum Jaringan</span>
+                <h1 class="text-2xl md:text-3xl font-bold text-white mt-1">Portal Praktikum Simulator Jaringan</h1>
+            </div>
+            <div class="flex items-center gap-3 bg-slate-800/80 border border-slate-700/60 px-4 py-2 rounded-lg text-sm text-slate-300">
+                <i class="ph ph-stack text-indigo-400 text-lg"></i>
+                <span>Total: <strong>8 LKPD</strong></span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Content Grid Section -->
+    <main class="max-w-7xl mx-auto px-6 py-10 flex-grow w-full">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+
+            <!-- Card LKPD 1 -->
+            <div class="bg-slate-800/50 border border-slate-700/60 rounded-xl p-5 flex flex-col justify-between hover:border-indigo-500/50 hover:shadow-lg hover:shadow-indigo-500/10 transition-all duration-300 group">
+                <div>
+                    <div class="flex justify-between items-start mb-4">
+                        <span class="px-2.5 py-1 text-xs font-semibold rounded-md bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">LKPD 01</span>
+                        <i class="ph ph-screencast text-2xl text-slate-400 group-hover:text-indigo-400 transition-colors"></i>
+                    </div>
+                    <h2 class="text-lg font-bold text-white mb-2 group-hover:text-indigo-300 transition-colors">Topologi Peer-to-Peer</h2>
+                    <p class="text-xs text-slate-400 mb-4 line-clamp-2">Memahami media transmisi kabel dan komunikasi data langsung antar dua komputer tanpa perantara.</p>
+                    <div class="text-xs bg-slate-900/60 p-2.5 rounded-lg border border-slate-800/80 mb-4">
+                        <span class="text-slate-400 font-semibold block mb-1">Perangkat & Tools:</span>
+                        <span class="text-slate-300">2 PC, Cable Tool</span>
+                    </div>
+                </div>
+                <a href="lkpd1.html" class="w-full py-2 px-4 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg text-sm font-medium transition-colors text-center inline-block">Buka LKPD 1</a>
+            </div>
+
+            <!-- Card LKPD 2 -->
+            <div class="bg-slate-800/50 border border-slate-700/60 rounded-xl p-5 flex flex-col justify-between hover:border-indigo-500/50 hover:shadow-lg hover:shadow-indigo-500/10 transition-all duration-300 group">
+                <div>
+                    <div class="flex justify-between items-start mb-4">
+                        <span class="px-2.5 py-1 text-xs font-semibold rounded-md bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">LKPD 02</span>
+                        <i class="ph ph-circles-three text-2xl text-slate-400 group-hover:text-indigo-400 transition-colors"></i>
+                    </div>
+                    <h2 class="text-lg font-bold text-white mb-2 group-hover:text-indigo-300 transition-colors">Hub vs Switch (Star)</h2>
+                    <p class="text-xs text-slate-400 mb-4 line-clamp-2">Mengamati perbedaan pengiriman data broadcast pada Hub dan unicast berbasis MAC Address pada Switch.</p>
+                    <div class="text-xs bg-slate-900/60 p-2.5 rounded-lg border border-slate-800/80 mb-4">
+                        <span class="text-slate-400 font-semibold block mb-1">Perangkat & Tools:</span>
+                        <span class="text-slate-300">3–4 PC, 1 Hub, 1 Switch</span>
+                    </div>
+                </div>
+                <a href="lkpd2.html" class="w-full py-2 px-4 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg text-sm font-medium transition-colors text-center inline-block">Buka LKPD 2</a>
+            </div>
+
+            <!-- Card LKPD 3 -->
+            <div class="bg-slate-800/50 border border-slate-700/60 rounded-xl p-5 flex flex-col justify-between hover:border-indigo-500/50 hover:shadow-lg hover:shadow-indigo-500/10 transition-all duration-300 group">
+                <div>
+                    <div class="flex justify-between items-start mb-4">
+                        <span class="px-2.5 py-1 text-xs font-semibold rounded-md bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">LKPD 03</span>
+                        <i class="ph ph-terminal-window text-2xl text-slate-400 group-hover:text-indigo-400 transition-colors"></i>
+                    </div>
+                    <h2 class="text-lg font-bold text-white mb-2 group-hover:text-indigo-300 transition-colors">IP Class C & Uji PING</h2>
+                    <p class="text-xs text-slate-400 mb-4 line-clamp-2">Konfigurasi IP & Subnet Mask satu segmen serta analisis paket ICMP Echo Request/Reply.</p>
+                    <div class="text-xs bg-slate-900/60 p-2.5 rounded-lg border border-slate-800/80 mb-4">
+                        <span class="text-slate-400 font-semibold block mb-1">Perangkat & Tools:</span>
+                        <span class="text-slate-300">3 PC, 1 Switch, CLI (Ping Tool)</span>
+                    </div>
+                </div>
+                <a href="lkpd3.html" class="w-full py-2 px-4 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg text-sm font-medium transition-colors text-center inline-block">Buka LKPD 3</a>
+            </div>
+
+            <!-- Card LKPD 4 -->
+            <div class="bg-slate-800/50 border border-slate-700/60 rounded-xl p-5 flex flex-col justify-between hover:border-indigo-500/50 hover:shadow-lg hover:shadow-indigo-500/10 transition-all duration-300 group">
+                <div>
+                    <div class="flex justify-between items-start mb-4">
+                        <span class="px-2.5 py-1 text-xs font-semibold rounded-md bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">LKPD 04</span>
+                        <i class="ph ph-table text-2xl text-slate-400 group-hover:text-indigo-400 transition-colors"></i>
+                    </div>
+                    <h2 class="text-lg font-bold text-white mb-2 group-hover:text-indigo-300 transition-colors">Protokol ARP & MAC Table</h2>
+                    <p class="text-xs text-slate-400 mb-4 line-clamp-2">Mengamati pemetaan IP Address ke MAC Address secara visual melalui paket ARP.</p>
+                    <div class="text-xs bg-slate-900/60 p-2.5 rounded-lg border border-slate-800/80 mb-4">
+                        <span class="text-slate-400 font-semibold block mb-1">Perangkat & Tools:</span>
+                        <span class="text-slate-300">3 PC, 1 Switch, ARP Table</span>
+                    </div>
+                </div>
+                <a href="lkpd4.html" class="w-full py-2 px-4 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg text-sm font-medium transition-colors text-center inline-block">Buka LKPD 4</a>
+            </div>
+
+            <!-- Card LKPD 5 -->
+            <div class="bg-slate-800/50 border border-slate-700/60 rounded-xl p-5 flex flex-col justify-between hover:border-indigo-500/50 hover:shadow-lg hover:shadow-indigo-500/10 transition-all duration-300 group">
+                <div>
+                    <div class="flex justify-between items-start mb-4">
+                        <span class="px-2.5 py-1 text-xs font-semibold rounded-md bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">LKPD 05</span>
+                        <i class="ph ph-arrows-split text-2xl text-slate-400 group-hover:text-indigo-400 transition-colors"></i>
+                    </div>
+                    <h2 class="text-lg font-bold text-white mb-2 group-hover:text-indigo-300 transition-colors">Inter-Subnet Routing</h2>
+                    <p class="text-xs text-slate-400 mb-4 line-clamp-2">Konfigurasi IP interface router dan Default Gateway pada PC untuk menghubungkan dua subnet berlainan.</p>
+                    <div class="text-xs bg-slate-900/60 p-2.5 rounded-lg border border-slate-800/80 mb-4">
+                        <span class="text-slate-400 font-semibold block mb-1">Perangkat & Tools:</span>
+                        <span class="text-slate-300">2 PC, 2 Switch, 1 Router</span>
+                    </div>
+                </div>
+                <a href="lkpd5.html" class="w-full py-2 px-4 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg text-sm font-medium transition-colors text-center inline-block">Buka LKPD 5</a>
+            </div>
+
+            <!-- Card LKPD 6 -->
+            <div class="bg-slate-800/50 border border-slate-700/60 rounded-xl p-5 flex flex-col justify-between hover:border-indigo-500/50 hover:shadow-lg hover:shadow-indigo-500/10 transition-all duration-300 group">
+                <div>
+                    <div class="flex justify-between items-start mb-4">
+                        <span class="px-2.5 py-1 text-xs font-semibold rounded-md bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">LKPD 06</span>
+                        <i class="ph ph-hard-drives text-2xl text-slate-400 group-hover:text-indigo-400 transition-colors"></i>
+                    </div>
+                    <h2 class="text-lg font-bold text-white mb-2 group-hover:text-indigo-300 transition-colors">Layanan DHCP Server</h2>
+                    <p class="text-xs text-slate-400 mb-4 line-clamp-2">Mengonfigurasi DHCP Server untuk mendistribusikan IP, Subnet Mask, dan Gateway otomatis.</p>
+                    <div class="text-xs bg-slate-900/60 p-2.5 rounded-lg border border-slate-800/80 mb-4">
+                        <span class="text-slate-400 font-semibold block mb-1">Perangkat & Tools:</span>
+                        <span class="text-slate-300">3 PC, 1 Switch, 1 DHCP Server</span>
+                    </div>
+                </div>
+                <a href="lkpd6.html" class="w-full py-2 px-4 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg text-sm font-medium transition-colors text-center inline-block">Buka LKPD 6</a>
+            </div>
+
+            <!-- Card LKPD 7 -->
+            <div class="bg-slate-800/50 border border-slate-700/60 rounded-xl p-5 flex flex-col justify-between hover:border-indigo-500/50 hover:shadow-lg hover:shadow-indigo-500/10 transition-all duration-300 group">
+                <div>
+                    <div class="flex justify-between items-start mb-4">
+                        <span class="px-2.5 py-1 text-xs font-semibold rounded-md bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">LKPD 07</span>
+                        <i class="ph ph-globe text-2xl text-slate-400 group-hover:text-indigo-400 transition-colors"></i>
+                    </div>
+                    <h2 class="text-lg font-bold text-white mb-2 group-hover:text-indigo-300 transition-colors">Web Server & DNS</h2>
+                    <p class="text-xs text-slate-400 mb-4 line-clamp-2">Mekanisme menerjemahkan domain URL menjadi IP Address serta mengakses layanan HTTP via browser.</p>
+                    <div class="text-xs bg-slate-900/60 p-2.5 rounded-lg border border-slate-800/80 mb-4">
+                        <span class="text-slate-400 font-semibold block mb-1">Perangkat & Tools:</span>
+                        <span class="text-slate-300">2 PC, 1 Switch, Web & DNS Server</span>
+                    </div>
+                </div>
+                <a href="lkpd7.html" class="w-full py-2 px-4 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg text-sm font-medium transition-colors text-center inline-block">Buka LKPD 7</a>
+            </div>
+
+            <!-- Card LKPD 8 -->
+            <div class="bg-slate-800/50 border border-slate-700/60 rounded-xl p-5 flex flex-col justify-between hover:border-indigo-500/50 hover:shadow-lg hover:shadow-indigo-500/10 transition-all duration-300 group">
+                <div>
+                    <div class="flex justify-between items-start mb-4">
+                        <span class="px-2.5 py-1 text-xs font-semibold rounded-md bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">LKPD 08</span>
+                        <i class="ph ph-path text-2xl text-slate-400 group-hover:text-indigo-400 transition-colors"></i>
+                    </div>
+                    <h2 class="text-lg font-bold text-white mb-2 group-hover:text-indigo-300 transition-colors">Traceroute & Troubleshooting</h2>
+                    <p class="text-xs text-slate-400 mb-4 line-clamp-2">Menganalisis alur lompatan paket (hop) melintasi router dan mendiagnosis titik kegagalan koneksi.</p>
+                    <div class="text-xs bg-slate-900/60 p-2.5 rounded-lg border border-slate-800/80 mb-4">
+                        <span class="text-slate-400 font-semibold block mb-1">Perangkat & Tools:</span>
+                        <span class="text-slate-300">Multi-Router, PC, CLI (Traceroute)</span>
+                    </div>
+                </div>
+                <a href="lkpd8.html" class="w-full py-2 px-4 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg text-sm font-medium transition-colors text-center inline-block">Buka LKPD 8</a>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-slate-800 bg-slate-950 py-6 text-center text-xs text-slate-500">
+        <p>© Modul Praktikum Simulasi Jaringan Komputer. Didesain untuk pembelajaran mandiri & interaktif.</p>
+    </footer>
+
+</body>
+</html>

@@ -1,0 +1,864 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LKPD 2: Analisis Perbedaan Hub dan Switch pada Topologi Star</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans antialiased min-h-screen flex flex-col">
+
+    <header class="bg-indigo-600 text-white shadow-md">
+        <div class="max-w-5xl mx-auto px-4 py-4 flex flex-col sm:flex-row justify-between items-center gap-2">
+            <div>
+                <h1 class="text-xl font-bold mt-1">LKPD 2 : Analisis Perbedaan Hub dan Switch pada Topologi Star</h1>
+            </div>
+            <div class="text-sm bg-indigo-700/60 px-3 py-1.5 rounded-lg border border-indigo-500">
+                <i class="fa-solid fa-user-graduate mr-1.5"></i> <span id="displayNama">Siswa Praktikan</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-grow max-w-5xl w-full mx-auto p-4 sm:p-6 space-y-6">
+
+        <!-- Identitas Siswa -->
+        <section class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200" id="section-identitas">
+            <h2 class="text-base font-bold text-slate-700 mb-3 flex items-center gap-2">
+                <i class="fa-solid fa-id-card text-indigo-600"></i> Identitas Peserta Didik
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                <div>
+                    <label class="block text-xs font-medium text-slate-500 mb-1">Pilih Sekolah</label>
+                    <select id="inputSekolah" onchange="filterKelas()" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white">
+                        <option value="">-- Pilih Sekolah --</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-slate-500 mb-1">Kelas</label>
+                    <select id="inputKelas" onchange="filterNama()" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white">
+                        <option value="">-- Pilih Kelas --</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-slate-500 mb-1">Nama Lengkap</label>
+                    <select id="inputNamaLengkap" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white">
+                        <option value="">-- Pilih Nama --</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="mb-4">
+                <label class="flex items-center space-x-2 cursor-pointer">
+                    <input type="radio" id="pilihanLkpd" name="pilihanLkpd" value="LKPD 2 (Hub vs Switch Topologi Star)" class="w-4 h-4 text-indigo-600 border-slate-300 focus:ring-indigo-500" checked>
+                    <span class="text-sm font-medium text-slate-700">LKPD 2 : Analisis Perbedaan Hub dan Switch pada Topologi Star</span>
+                </label>
+            </div>
+
+            <button onclick="simpanIdentitas()" class="mt-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors flex items-center gap-2">
+                <i class="fa-solid fa-check"></i> Mulai LKPD & Catat Waktu
+            </button>
+        </section>
+
+        <div id="mainContent" class="opacity-50 pointer-events-none transition-opacity duration-300 space-y-6">
+
+            <!-- Purpose and Tools -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
+                    <h3 class="font-bold text-slate-700 mb-2 flex items-center gap-2 text-sm">
+                        <i class="fa-solid fa-bullseye text-indigo-600"></i> Tujuan Pembelajaran
+                    </h3>
+                    <ul class="text-xs text-slate-600 space-y-1.5 list-disc list-inside">
+                        <li>Mengamati perbedaan cara kerja pengiriman data broadcast pada Hub dan unicast pada Switch.</li>
+                        <li>Menganalisis peran MAC Address Table dalam proses transmisi data Switch.</li>
+                        <li>Memahami dampak penggunaan Hub vs Switch terhadap efisiensi trafik data dan collision domain.</li>
+                    </ul>
+                </div>
+                <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
+                    <h3 class="font-bold text-slate-700 mb-2 flex items-center gap-2 text-sm">
+                        <i class="fa-solid fa-toolbox text-indigo-600"></i> Perangkat & Tools
+                    </h3>
+                    <ul class="text-xs text-slate-600 space-y-1.5 list-disc list-inside">
+                        <li>Browser Web (PC/Laptop/Tablet).</li>
+                        <li>Simulator PackeTTrino (Embedded).</li>
+                        <li>Komponen Simulator: 4 Node PC, 1 Hub, 1 Switch, Cable Tool.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Embedded PackeTTrino Simulator Section -->
+            <section class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="font-bold text-slate-700 text-sm flex items-center gap-2">
+                        <i class="fa-solid fa-network-wired text-indigo-600"></i> Simulator Live PackeTTrino
+                    </h3>
+                    <span class="text-xs bg-emerald-100 text-emerald-800 font-medium px-2.5 py-0.5 rounded-full">Interactive Workspace</span>
+                </div>
+                <p class="text-xs text-slate-500 mb-4">Gunakan simulator di bawah ini untuk membuat topologi Star menggunakan 4 PC dengan Hub, amati alur datanya, lalu gantilah Hub dengan Switch untuk membandingkan alur transmisinya.</p>
+
+                <div class="w-full h-[550px] rounded-xl overflow-hidden border border-slate-300 shadow-inner bg-slate-900">
+                    <iframe src="https://simonmurd.github.io/PackeTTrino" class="w-full h-full border-0" allow="fullscreen"></iframe>
+                </div>
+            </section>
+
+            <!-- Tabel Pengamatan -->
+            <section class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
+                <h3 class="font-bold text-slate-700 mb-3 text-sm flex items-center gap-2">
+                    <i class="fa-solid fa-table text-indigo-600"></i> Lembar Tabel Pengamatan Praktikum (10 Item)
+                </h3>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-xs border-collapse">
+                        <thead>
+                            <tr class="bg-slate-100 text-slate-700">
+                                <th class="p-2.5 border border-slate-200">No</th>
+                                <th class="p-2.5 border border-slate-200">Langkah / Aktivitas Simulasi</th>
+                                <th class="p-2.5 border border-slate-200">Konfigurasi / Parameter</th>
+                                <th class="p-2.5 border border-slate-200">Hasil Pengamatan</th>
+                                <th class="p-2.5 border border-slate-200">Keterangan Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabelPengamatanBody">
+                            <tr>
+                                <td class="p-2.5 border border-slate-200 text-center font-medium">1</td>
+                                <td class="p-2.5 border border-slate-200"><input type="text" class="w-full bg-transparent border-b border-slate-300 focus:outline-none" value="Membuat Topologi Star dengan Hub"></td>
+                                <td class="p-2.5 border border-slate-200"><input type="text" class="w-full bg-transparent border-b border-slate-300 focus:outline-none" value="4 PC + 1 Hub + Kabel"></td>
+                                <td class="p-2.5 border border-slate-200"><input type="text" class="w-full bg-transparent border-b border-slate-300 focus:outline-none" placeholder="Semua PC terhubung ke Hub"></td>
+                                <td class="p-2.5 border border-slate-200"><input type="text" class="w-full bg-transparent border-b border-slate-300 focus:outline-none" placeholder="Terhubung"></td>
+                            </tr>
+                            <tr>
+                                <td class="p-2.5 border border-slate-200 text-center font-medium">2</td>
+                                <td class="p-2.5 border border-slate-200"><input type="text" class="w-full bg-transparent border-b border-slate-300 focus:outline-none" value="Pengaturan IP Address PC1-PC4"></td>
+                                <td class="p-2.5 border border-slate-200"><input type="text" class="w-full bg-transparent border-b border-slate-300 focus:outline-none" value="192.168.1.1 s/d 192.168.1.4"></td>
+                                <td class="p-2.5 border border-slate-200"><input type="text" class="w-full bg-transparent border-b border-slate-300 focus:outline-none" placeholder="IP satu subnet tersimpan"></td>
+                                <td class="p-2.5 border border-slate-200"><input type="text" class="w-full bg-transparent border-b border-slate-300 focus:outline-none" placeholder="Aktif"></td>
+                            </tr>
+                            <tr>
+                                <td class="p-2.5 border border-slate-200 text-center font-medium">3</td>
+                                <td class="p-2.5 border border-slate-200"><input type="text" class="w-full bg-transparent border-b border-slate-300 focus:outline-none" value="Ping PC-1 ke PC-2 pada Hub"></td>
+                                <td class="p-2.5 border border-slate-200"><input type="text" class="w-full bg-transparent border-b border-slate-300 focus:outline-none" value="ping 192.168.1.2"></td>
+                                <td class="p-2.5 border border-slate-200"><input type="text" class="w-full bg-transparent border-b border-slate-300 focus:outline-none" placeholder="Paket dikirim ke PC-2, PC-3, & PC-4"></td>
+                                <td class="p-2.5 border border-slate-200"><input type="text" class="w-full bg-transparent border-b border-slate-300 focus:outline-none" placeholder="Broadcast Hub"></td>
+                            </tr>
+                            <tr>
+                                <td class="p-2.5 border border-slate-200 text-center font-medium">4</td>
+                                <td class="p-2.5 border border-slate-200"><input type="text" class="w-full bg-transparent border-b border-slate-300 focus:outline-none" value="Respon PC-3 & PC-4 pada Hub"></td>
+                                <td class="p-2.5 border border-slate-200"><input type="text" class="w-full bg-transparent border-b border-slate-300 focus:outline-none" value="Penerimaan Paket ICMP"></td>
+                                <td class="p-2.5 border border-slate-200"><input type="text" class="w-full bg-transparent border-b border-slate-300 focus:outline-none" placeholder="PC-3 & PC-4 menolak/drop paket"></td>
+                                <td class="p-2.5 border border-slate-200"><input type="text" class="w-full bg-transparent border-b border-slate-300 focus:outline-none" placeholder="Packet Dropped"></td>
+                            </tr>
+                            <tr>
+                                <td class="p-2.5 border border-slate-200 text-center font-medium">5</td>
+                                <td class="p-2.5 border border-slate-200"><input type="text" class="w-full bg-transparent border-b border-slate-300 focus:outline-none" value="Mengganti Perangkat Hub dengan Switch"></td>
+                                <td class="p-2.5 border border-slate-200"><input type="text" class="w-full bg-transparent border-b border-slate-300 focus:outline-none" value="Replace Hub -> Switch"></td>
+                                <td class="p-2.5 border border-slate-200"><input type="text" class="w-full bg-transparent border-b border-slate-300 focus:outline-none" placeholder="Topologi Star beralih ke Switch"></td>
+                                <td class="p-2.5 border border-slate-200"><input type="text" class="w-full bg-transparent border-b border-slate-300 focus:outline-none" placeholder="Terhubung"></td>
+                            </tr>
+                            <tr>
+                                <td class="p-2.5 border border-slate-200 text-center font-medium">6</td>
+                                <td class="p-2.5 border border-slate-200"><input type="text" class="w-full bg-transparent border-b border-slate-300 focus:outline-none" value="Ping Pertama PC-1 ke PC-2 pada Switch"></td>
+                                <td class="p-2.5 border border-slate-200"><input type="text" class="w-full bg-transparent border-b border-slate-300 focus:outline-none" value="ping 192.168.1.2 (ARP Check)"></td>
+                                <td class="p-2.5 border border-slate-200"><input type="text" class="w-full bg-transparent border-b border-slate-300 focus:outline-none" placeholder="Protokol ARP disebar untuk cari MAC"></td>
+                                <td class="p-2.5 border border-slate-200"><input type="text" class="w-full bg-transparent border-b border-slate-300 focus:outline-none" placeholder="ARP Broadcast"></td>
+                            </tr>
+                            <tr>
+                                <td class="p-2.5 border border-slate-200 text-center font-medium">7</td>
+                                <td class="p-2.5 border border-slate-200"><input type="text" class="w-full bg-transparent border-b border-slate-300 focus:outline-none" value="Ping Kedua PC-1 ke PC-2 pada Switch"></td>
+                                <td class="p-2.5 border border-slate-200"><input type="text" class="w-full bg-transparent border-b border-slate-300 focus:outline-none" value="ping 192.168.1.2 (Unicast ICMP)"></td>
+                                <td class="p-2.5 border border-slate-200"><input type="text" class="w-full bg-transparent border-b border-slate-300 focus:outline-none" placeholder="Paket ICMP langsung ke PC-2 saja"></td>
+                                <td class="p-2.5 border border-slate-200"><input type="text" class="w-full bg-transparent border-b border-slate-300 focus:outline-none" placeholder="Unicast Switch"></td>
+                            </tr>
+                            <tr>
+                                <td class="p-2.5 border border-slate-200 text-center font-medium">8</td>
+                                <td class="p-2.5 border border-slate-200"><input type="text" class="w-full bg-transparent border-b border-slate-300 focus:outline-none" value="Pemeriksaan MAC Address Table Switch"></td>
+                                <td class="p-2.5 border border-slate-200"><input type="text" class="w-full bg-transparent border-b border-slate-300 focus:outline-none" value="Inspect Switch / MAC Table"></td>
+                                <td class="p-2.5 border border-slate-200"><input type="text" class="w-full bg-transparent border-b border-slate-300 focus:outline-none" placeholder="Tabel mencatat Port & MAC Address"></td>
+                                <td class="p-2.5 border border-slate-200"><input type="text" class="w-full bg-transparent border-b border-slate-300 focus:outline-none" placeholder="Tercatat"></td>
+                            </tr>
+                            <tr>
+                                <td class="p-2.5 border border-slate-200 text-center font-medium">9</td>
+                                <td class="p-2.5 border border-slate-200"><input type="text" class="w-full bg-transparent border-b border-slate-300 focus:outline-none" value="Uji Ping Simultan (PC1->PC2 & PC3->PC4)"></td>
+                                <td class="p-2.5 border border-slate-200"><input type="text" class="w-full bg-transparent border-b border-slate-300 focus:outline-none" value="Simultaneous Ping"></td>
+                                <td class="p-2.5 border border-slate-200"><input type="text" class="w-full bg-transparent border-b border-slate-300 focus:outline-none" placeholder="Hub: Kemacetan/Collision; Switch: Lancar"></td>
+                                <td class="p-2.5 border border-slate-200"><input type="text" class="w-full bg-transparent border-b border-slate-300 focus:outline-none" placeholder="Perbedaan Performa"></td>
+                            </tr>
+                            <tr>
+                                <td class="p-2.5 border border-slate-200 text-center font-medium">10</td>
+                                <td class="p-2.5 border border-slate-200"><input type="text" class="w-full bg-transparent border-b border-slate-300 focus:outline-none" value="Analisis Efisiensi Bandwidth Jaringan"></td>
+                                <td class="p-2.5 border border-slate-200"><input type="text" class="w-full bg-transparent border-b border-slate-300 focus:outline-none" value="Hub vs Switch Comparison"></td>
+                                <td class="p-2.5 border border-slate-200"><input type="text" class="w-full bg-transparent border-b border-slate-300 focus:outline-none" placeholder="Switch jauh lebih efisien & aman"></td>
+                                <td class="p-2.5 border border-slate-200"><input type="text" class="w-full bg-transparent border-b border-slate-300 focus:outline-none" placeholder="Selesai"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Pertanyaan Analisis -->
+            <section class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 space-y-4">
+                <h3 class="font-bold text-slate-700 text-sm flex items-center gap-2">
+                    <i class="fa-solid fa-clipboard-question text-indigo-600"></i> Pertanyaan Analisis & Evaluasi (10 Item)
+                </h3>
+                
+                <div>
+                    <label class="block text-xs font-medium text-slate-600 mb-1">1. Jelaskan perbedaan mendasar cara kerja Hub dan Switch dalam meneruskan paket data ke komputer tujuan!</label>
+                    <textarea id="ans1" rows="2" class="w-full px-3 py-2 text-xs border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Tuliskan jawaban analisis Anda di sini..."></textarea>
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-slate-600 mb-1">2. Mengapa pengiriman data melalui Hub disebut menggunakan metode *Broadcast* ke seluruh port?</label>
+                    <textarea id="ans2" rows="2" class="w-full px-3 py-2 text-xs border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Tuliskan jawaban analisis Anda di sini..."></textarea>
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-slate-600 mb-1">3. Apa yang terjadi pada PC-3 dan PC-4 saat PC-1 mengirimkan paket `ping` ke PC-2 pada jaringan yang terhubung dengan Hub?</label>
+                    <textarea id="ans3" rows="2" class="w-full px-3 py-2 text-xs border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Tuliskan jawaban analisis Anda di sini..."></textarea>
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-slate-600 mb-1">4. Bagaimana Switch dapat mengenali komputer mana yang menjadi tujuan pengiriman paket sehingga data bisa dikirim secara *Unicast*?</label>
+                    <textarea id="ans4" rows="2" class="w-full px-3 py-2 text-xs border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Tuliskan jawaban analisis Anda di sini..."></textarea>
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-slate-600 mb-1">5. Jelaskan fungsi dari **MAC Address Table (CAM Table)** pada perangkat Switch dan bagaimana proses terbentuknya tabel tersebut!</label>
+                    <textarea id="ans5" rows="2" class="w-full px-3 py-2 text-xs border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Tuliskan jawaban analisis Anda di sini..."></textarea>
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-slate-600 mb-1">6. Mengapa pada saat pertama kali Switch dinyalakan, paket pertama (`ping`) sering kali diawali dengan animasi penyebaran paket ARP?</label>
+                    <textarea id="ans6" rows="2" class="w-full px-3 py-2 text-xs border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Tuliskan jawaban analisis Anda di sini..."></textarea>
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-slate-600 mb-1">7. Jelaskan perbedaan konsep **Collision Domain** pada Hub (yang berbagi 1 domain) dengan Switch (tiap port 1 domain)!</label>
+                    <textarea id="ans7" rows="2" class="w-full px-3 py-2 text-xs border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Tuliskan jawaban analisis Anda di sini..."></textarea>
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-slate-600 mb-1">8. Mengapa penggunaan Switch lebih aman (*secure*) dari aksi penyadapan data (*sniffing*) dibandingkan dengan Hub?</label>
+                    <textarea id="ans8" rows="2" class="w-full px-3 py-2 text-xs border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Tuliskan jawaban analisis Anda di sini..."></textarea>
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-slate-600 mb-1">9. Mengapa transmisi data pada Hub bersifat *Half-Duplex* sedangkan pada Switch dapat mendukung *Full-Duplex*?</label>
+                    <textarea id="ans9" rows="2" class="w-full px-3 py-2 text-xs border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Tuliskan jawaban analisis Anda di sini..."></textarea>
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-slate-600 mb-1">10. Berikan kesimpulan menyeluruh mengenai perbedaan performa dan rekomendasi penggunaan Hub vs Switch pada Topologi Star!</label>
+                    <textarea id="ans10" rows="2" class="w-full px-3 py-2 text-xs border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Tuliskan kesimpulan praktikum di sini..."></textarea>
+                </div>
+            </section>
+
+            <!-- Soal Pilihan Ganda -->
+            <section class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 space-y-6">
+                <h3 class="font-bold text-slate-700 text-sm flex items-center gap-2">
+                    <i class="fa-solid fa-list-check text-indigo-600"></i> Soal Evaluasi Pilihan Ganda (20 Soal)
+                </h3>
+
+                <!-- Soal 1 -->
+                <div class="space-y-2 border-b border-slate-100 pb-4">
+                    <p class="text-xs font-medium text-slate-700">1. Perangkat jaringan yang bekerja pada Layer 1 (Physical Layer) OSI dan meneruskan sinyal data ke seluruh port secara masif adalah...</p>
+                    <div class="space-y-1 pl-2 text-xs text-slate-600">
+                        <label class="block"><input type="radio" name="pg1" value="A" class="mr-2"> A. Switch</label>
+                        <label class="block"><input type="radio" name="pg1" value="B" class="mr-2"> B. Router</label>
+                        <label class="block"><input type="radio" name="pg1" value="C" class="mr-2"> C. Hub</label>
+                        <label class="block"><input type="radio" name="pg1" value="D" class="mr-2"> D. Modem</label>
+                        <label class="block"><input type="radio" name="pg1" value="E" class="mr-2"> E. Access Point</label>
+                    </div>
+                </div>
+
+                <!-- Soal 2 -->
+                <div class="space-y-2 border-b border-slate-100 pb-4">
+                    <p class="text-xs font-medium text-slate-700">2. Perangkat Switch bekerja pada Layer OSI berapakah dan menggunakan alamat apa untuk mengarahkan paket?</p>
+                    <div class="space-y-1 pl-2 text-xs text-slate-600">
+                        <label class="block"><input type="radio" name="pg2" value="A" class="mr-2"> A. Layer 1 (Physical) - IP Address</label>
+                        <label class="block"><input type="radio" name="pg2" value="B" class="mr-2"> B. Layer 2 (Data Link) - MAC Address</label>
+                        <label class="block"><input type="radio" name="pg2" value="C" class="mr-2"> C. Layer 3 (Network) - IP Address</label>
+                        <label class="block"><input type="radio" name="pg2" value="D" class="mr-2"> D. Layer 4 (Transport) - Port Number</label>
+                        <label class="block"><input type="radio" name="pg2" value="E" class="mr-2"> E. Layer 7 (Application) - Domain Name</label>
+                    </div>
+                </div>
+
+                <!-- Soal 3 -->
+                <div class="space-y-2 border-b border-slate-100 pb-4">
+                    <p class="text-xs font-medium text-slate-700">3. Istilah pengiriman paket data yang dialamatkan secara spesifik hanya kepada satu perangkat penerima disebut...</p>
+                    <div class="space-y-1 pl-2 text-xs text-slate-600">
+                        <label class="block"><input type="radio" name="pg3" value="A" class="mr-2"> A. Broadcast</label>
+                        <label class="block"><input type="radio" name="pg3" value="B" class="mr-2"> B. Multicast</label>
+                        <label class="block"><input type="radio" name="pg3" value="C" class="mr-2"> C. Unicast</label>
+                        <label class="block"><input type="radio" name="pg3" value="D" class="mr-2"> D. Anycast</label>
+                        <label class="block"><input type="radio" name="pg3" value="E" class="mr-2"> E. Simplex</label>
+                    </div>
+                </div>
+
+                <!-- Soal 4 -->
+                <div class="space-y-2 border-b border-slate-100 pb-4">
+                    <p class="text-xs font-medium text-slate-700">4. Mengapa pada jaringan topologi Star yang menggunakan Hub sering terjadi tabrakan data (*collision*)?</p>
+                    <div class="space-y-1 pl-2 text-xs text-slate-600">
+                        <label class="block"><input type="radio" name="pg4" value="A" class="mr-2"> A. Karena Hub memiliki MAC Address Table yang penuh</label>
+                        <label class="block"><input type="radio" name="pg4" value="B" class="mr-2"> B. Karena seluruh port pada Hub berada dalam 1 Collision Domain yang sama</label>
+                        <label class="block"><input type="radio" name="pg4" value="C" class="mr-2"> C. Karena Hub menggunakan kabel Fiber Optik</label>
+                        <label class="block"><input type="radio" name="pg4" value="D" class="mr-2"> D. Karena IP Address komputer berbenturan</label>
+                        <label class="block"><input type="radio" name="pg4" value="E" class="mr-2"> E. Karena Hub tidak dialiri arus listrik</label>
+                    </div>
+                </div>
+
+                <!-- Soal 5 -->
+                <div class="space-y-2 border-b border-slate-100 pb-4">
+                    <p class="text-xs font-medium text-slate-700">5. Tabel pada Switch yang memetakan nomor port fisik dengan MAC Address komputer dinamakan...</p>
+                    <div class="space-y-1 pl-2 text-xs text-slate-600">
+                        <label class="block"><input type="radio" name="pg5" value="A" class="mr-2"> A. Routing Table</label>
+                        <label class="block"><input type="radio" name="pg5" value="B" class="mr-2"> B. MAC Address / CAM Table</label>
+                        <label class="block"><input type="radio" name="pg5" value="C" class="mr-2"> C. DNS Cache Table</label>
+                        <label class="block"><input type="radio" name="pg5" value="D" class="mr-2"> D. DHCP Lease Table</label>
+                        <label class="block"><input type="radio" name="pg5" value="E" class="mr-2"> E. Access Control List</label>
+                    </div>
+                </div>
+
+                <!-- Soal 6 -->
+                <div class="space-y-2 border-b border-slate-100 pb-4">
+                    <p class="text-xs font-medium text-slate-700">6. Apa yang dilakukan oleh Switch jika alamat MAC tujuan paket belum terdaftar pada MAC Address Table?</p>
+                    <div class="space-y-1 pl-2 text-xs text-slate-600">
+                        <label class="block"><input type="radio" name="pg6" value="A" class="mr-2"> A. Membuang paket tersebut secara permanen</label>
+                        <label class="block"><input type="radio" name="pg6" value="B" class="mr-2"> B. Mengirimkan paket balasan error ke pengirim</label>
+                        <label class="block"><input type="radio" name="pg6" value="C" class="mr-2"> C. Melakukan *flooding* / broadcast paket ke seluruh port kecuali port asal</label>
+                        <label class="block"><input type="radio" name="pg6" value="D" class="mr-2"> D. Mematikan seluruh port pada Switch</label>
+                        <label class="block"><input type="radio" name="pg6" value="E" class="mr-2"> E. Mengubah IP Address pengirim</label>
+                    </div>
+                </div>
+
+                <!-- Soal 7 -->
+                <div class="space-y-2 border-b border-slate-100 pb-4">
+                    <p class="text-xs font-medium text-slate-700">7. Keunggulan utama penggunaan Switch dibandingkan Hub pada topologi Star adalah...</p>
+                    <div class="space-y-1 pl-2 text-xs text-slate-600">
+                        <label class="block"><input type="radio" name="pg7" value="A" class="mr-2"> A. Harga Switch jauh lebih murah dari Hub</label>
+                        <label class="block"><input type="radio" name="pg7" value="B" class="mr-2"> B. Efisiensi bandwidth tinggi karena lalu lintas data dikirimkan secara unicast</label>
+                        <label class="block"><input type="radio" name="pg7" value="C" class="mr-2"> C. Switch tidak membutuhkan kabel jaringan</label>
+                        <label class="block"><input type="radio" name="pg7" value="D" class="mr-2"> D. Switch dapat menghubungkan dua komputer tanpa IP Address</label>
+                        <label class="block"><input type="radio" name="pg7" value="E" class="mr-2"> E. Hub membagi koneksi menjadi full-duplex sedangkan Switch tidak</label>
+                    </div>
+                </div>
+
+                <!-- Soal 8 -->
+                <div class="space-y-2 border-b border-slate-100 pb-4">
+                    <p class="text-xs font-medium text-slate-700">8. Metode komunikasi data yang memungkinkan pengiriman dan penerimaan data secara bersamaan pada Switch dinamakan...</p>
+                    <div class="space-y-1 pl-2 text-xs text-slate-600">
+                        <label class="block"><input type="radio" name="pg8" value="A" class="mr-2"> A. Simplex</label>
+                        <label class="block"><input type="radio" name="pg8" value="B" class="mr-2"> B. Half-Duplex</label>
+                        <label class="block"><input type="radio" name="pg8" value="C" class="mr-2"> C. Full-Duplex</label>
+                        <label class="block"><input type="radio" name="pg8" value="D" class="mr-2"> D. Multiplex</label>
+                        <label class="block"><input type="radio" name="pg8" value="E" class="mr-2"> E. Dual-Core</label>
+                    </div>
+                </div>
+
+                <!-- Soal 9 -->
+                <div class="space-y-2 border-b border-slate-100 pb-4">
+                    <p class="text-xs font-medium text-slate-700">9. Jika PC-1 melakukan `ping` ke PC-2 pada jaringan yang menggunakan Hub, apa tindakan PC-3 yang juga terhubung ke Hub tersebut?</p>
+                    <div class="space-y-1 pl-2 text-xs text-slate-600">
+                        <label class="block"><input type="radio" name="pg9" value="A" class="mr-2"> A. Membalas paket ping tersebut ke PC-1</label>
+                        <label class="block"><input type="radio" name="pg9" value="B" class="mr-2"> B. Menerima paket fisik dari Hub namun membuangnya (*drop*) karena MAC tujuan tidak cocok</label>
+                        <label class="block"><input type="radio" name="pg9" value="C" class="mr-2"> C. Meneruskan paket tersebut ke internet</label>
+                        <label class="block"><input type="radio" name="pg9" value="D" class="mr-2"> D. Menyimpan paket di harddisk lokal</label>
+                        <label class="block"><input type="radio" name="pg9" value="E" class="mr-2"> E. Mematikan kartu jaringan (NIC)</label>
+                    </div>
+                </div>
+
+                <!-- Soal 10 -->
+                <div class="space-y-2 border-b border-slate-100 pb-4">
+                    <p class="text-xs font-medium text-slate-700">10. Panjang alokasi alamat fisik (MAC Address) pada kartu jaringan adalah...</p>
+                    <div class="space-y-1 pl-2 text-xs text-slate-600">
+                        <label class="block"><input type="radio" name="pg10" value="A" class="mr-2"> A. 32-bit Heksadesimal</label>
+                        <label class="block"><input type="radio" name="pg10" value="B" class="mr-2"> B. 48-bit (6 Oktet) Heksadesimal</label>
+                        <label class="block"><input type="radio" name="pg10" value="C" class="mr-2"> C. 128-bit Biner</label>
+                        <label class="block"><input type="radio" name="pg10" value="D" class="mr-2"> D. 64-bit Desimal</label>
+                        <label class="block"><input type="radio" name="pg10" value="E" class="mr-2"> E. 16-bit Karakter</label>
+                    </div>
+                </div>
+
+                <!-- Soal 11 -->
+                <div class="space-y-2 border-b border-slate-100 pb-4">
+                    <p class="text-xs font-medium text-slate-700">11. Perangkat manakah yang memisahkan *Collision Domain* pada setiap port fisiknya?</p>
+                    <div class="space-y-1 pl-2 text-xs text-slate-600">
+                        <label class="block"><input type="radio" name="pg11" value="A" class="mr-2"> A. Repeater</label>
+                        <label class="block"><input type="radio" name="pg11" value="B" class="mr-2"> B. Hub Passive</label>
+                        <label class="block"><input type="radio" name="pg11" value="C" class="mr-2"> C. Switch</label>
+                        <label class="block"><input type="radio" name="pg11" value="D" class="mr-2"> D. Kabel Coaxial</label>
+                        <label class="block"><input type="radio" name="pg11" value="E" class="mr-2"> E. Connector RJ-45</label>
+                    </div>
+                </div>
+
+                <!-- Soal 12 -->
+                <div class="space-y-2 border-b border-slate-100 pb-4">
+                    <p class="text-xs font-medium text-slate-700">12. Jenis kabel UTP yang digunakan untuk menghubungkan PC ke Hub atau PC ke Switch adalah...</p>
+                    <div class="space-y-1 pl-2 text-xs text-slate-600">
+                        <label class="block"><input type="radio" name="pg12" value="A" class="mr-2"> A. Straight-Through Cable</label>
+                        <label class="block"><input type="radio" name="pg12" value="B" class="mr-2"> B. Crossover Cable</label>
+                        <label class="block"><input type="radio" name="pg12" value="C" class="mr-2"> C. Rollover Cable</label>
+                        <label class="block"><input type="radio" name="pg12" value="D" class="mr-2"> D. Coaxial Cable</label>
+                        <label class="block"><input type="radio" name="pg12" value="E" class="mr-2"> E. Serial Cable</label>
+                    </div>
+                </div>
+
+                <!-- Soal 13 -->
+                <div class="space-y-2 border-b border-slate-100 pb-4">
+                    <p class="text-xs font-medium text-slate-700">13. Protokol ARP (Address Resolution Protocol) bertugas untuk memetakan...</p>
+                    <div class="space-y-1 pl-2 text-xs text-slate-600">
+                        <label class="block"><input type="radio" name="pg13" value="A" class="mr-2"> A. IP Address menjadi Domain Name</label>
+                        <label class="block"><input type="radio" name="pg13" value="B" class="mr-2"> B. IP Address menjadi MAC Address</label>
+                        <label class="block"><input type="radio" name="pg13" value="C" class="mr-2"> C. MAC Address menjadi Port Number</label>
+                        <label class="block"><input type="radio" name="pg13" value="D" class="mr-2"> D. Domain Name menjadi IP Address</label>
+                        <label class="block"><input type="radio" name="pg13" value="E" class="mr-2"> E. Subnet Mask menjadi Gateway</label>
+                    </div>
+                </div>
+
+                <!-- Soal 14 -->
+                <div class="space-y-2 border-b border-slate-100 pb-4">
+                    <p class="text-xs font-medium text-slate-700">14. Apabila 4 komputer terhubung pada 1 Switch 8-port, berapa jumlah Collision Domain dan Broadcast Domain yang terbentuk?</p>
+                    <div class="space-y-1 pl-2 text-xs text-slate-600">
+                        <label class="block"><input type="radio" name="pg14" value="A" class="mr-2"> A. 1 Collision Domain, 4 Broadcast Domain</label>
+                        <label class="block"><input type="radio" name="pg14" value="B" class="mr-2"> B. 4 Collision Domain, 1 Broadcast Domain</label>
+                        <label class="block"><input type="radio" name="pg14" value="C" class="mr-2"> C. 4 Collision Domain, 4 Broadcast Domain</label>
+                        <label class="block"><input type="radio" name="pg14" value="D" class="mr-2"> D. 1 Collision Domain, 1 Broadcast Domain</label>
+                        <label class="block"><input type="radio" name="pg14" value="E" class="mr-2"> E. 8 Collision Domain, 8 Broadcast Domain</label>
+                    </div>
+                </div>
+
+                <!-- Soal 15 -->
+                <div class="space-y-2 border-b border-slate-100 pb-4">
+                    <p class="text-xs font-medium text-slate-700">15. Alasan utama Hub kurang aman dari ancaman keamanan jaringan (security) adalah...</p>
+                    <div class="space-y-1 pl-2 text-xs text-slate-600">
+                        <label class="block"><input type="radio" name="pg15" value="A" class="mr-2"> A. Hub tidak menggunakan kabel UTP</label>
+                        <label class="block"><input type="radio" name="pg15" value="B" class="mr-2"> B. Data dikirimkan ke semua port sehingga mudah di-sniff oleh komputer lain</label>
+                        <label class="block"><input type="radio" name="pg15" value="C" class="mr-2"> C. Hub sering terkena virus komputer</label>
+                        <label class="block"><input type="radio" name="pg15" value="D" class="mr-2"> D. Hub mudah terbakar</label>
+                        <label class="block"><input type="radio" name="pg15" value="E" class="mr-2"> E. Hub secara otomatis mengunci password PC</label>
+                    </div>
+                </div>
+
+                <!-- Soal 16 -->
+                <div class="space-y-2 border-b border-slate-100 pb-4">
+                    <p class="text-xs font-medium text-slate-700">16. Alamat MAC Address bertipe broadcast yang digunakan saat mencari MAC penerima adalah...</p>
+                    <div class="space-y-1 pl-2 text-xs text-slate-60:">
+                        <label class="block"><input type="radio" name="pg16" value="A" class="mr-2"> A. 00:00:00:00:00:00</label>
+                        <label class="block"><input type="radio" name="pg16" value="B" class="mr-2"> B. FF:FF:FF:FF:FF:FF</label>
+                        <label class="block"><input type="radio" name="pg16" value="C" class="mr-2"> C. 192.168.1.255</label>
+                        <label class="block"><input type="radio" name="pg16" value="D" class="mr-2"> D. 255.255.255.255</label>
+                        <label class="block"><input type="radio" name="pg16" value="E" class="mr-2"> E. 127.0.0.1</label>
+                    </div>
+                </div>
+
+                <!-- Soal 17 -->
+                <div class="space-y-2 border-b border-slate-100 pb-4">
+                    <p class="text-xs font-medium text-slate-700">17. Fitur pada Switch managed yang memungkinkan pembagian jaringan LAN fisik menjadi beberapa jaringan logis adalah...</p>
+                    <div class="space-y-1 pl-2 text-xs text-slate-600">
+                        <label class="block"><input type="radio" name="pg17" value="A" class="mr-2"> A. VPN</label>
+                        <label class="block"><input type="radio" name="pg17" value="B" class="mr-2"> B. VLAN (Virtual LAN)</label>
+                        <label class="block"><input type="radio" name="pg17" value="C" class="mr-2"> C. NAT</label>
+                        <label class="block"><input type="radio" name="pg17" value="D" class="mr-2"> D. WLAN</label>
+                        <label class="block"><input type="radio" name="pg17" value="E" class="mr-2"> E. WAN</label>
+                    </div>
+                </div>
+
+                <!-- Soal 18 -->
+                <div class="space-y-2 border-b border-slate-100 pb-4">
+                    <p class="text-xs font-medium text-slate-700">18. Pada topologi Star, apabila salah satu kabel PC yang terhubung ke Switch putus, dampak yang terjadi pada PC lainnya adalah...</p>
+                    <div class="space-y-1 pl-2 text-xs text-slate-600">
+                        <label class="block"><input type="radio" name="pg18" value="A" class="mr-2"> A. Seluruh komputer dalam jaringan ikut terputus</label>
+                        <label class="block"><input type="radio" name="pg18" value="B" class="mr-2"> B. Komputer lain tetap dapat berkomunikasi secara normal</label>
+                        <label class="block"><input type="radio" name="pg18" value="C" class="mr-2"> C. Switch otomatis terbakar</label>
+                        <label class="block"><input type="radio" name="pg18" value="D" class="mr-2"> D. IP Address komputer lain akan terhapus</label>
+                        <label class="block"><input type="radio" name="pg18" value="E" class="mr-2"> E. Kecepatan seluruh komputer menurun 50%</label>
+                    </div>
+                </div>
+
+                <!-- Soal 19 -->
+                <div class="space-y-2 border-b border-slate-100 pb-4">
+                    <p class="text-xs font-medium text-slate-700">19. Mengapa Hub sering disebut sebagai *Multiport Repeater*?</p>
+                    <div class="space-y-1 pl-2 text-xs text-slate-600">
+                        <label class="block"><input type="radio" name="pg19" value="A" class="mr-2"> A. Karena Hub memiliki fungsi routing cerdas</label>
+                        <label class="block"><input type="radio" name="pg19" value="B" class="mr-2"> B. Karena Hub hanya mengulang (*repeat*) dan menguatkan sinyal ke seluruh port tanpa memfilter alamat</label>
+                        <label class="block"><input type="radio" name="pg19" value="C" class="mr-2"> C. Karena Hub dapat menyimpan tabel IP</label>
+                        <label class="block"><input type="radio" name="pg19" value="D" class="mr-2"> D. Karena Hub menghubungkan dua jaringan beda subnet</label>
+                        <label class="block"><input type="radio" name="pg19" value="E" class="mr-2"> E. Karena Hub bekerja pada Layer 3 OSI</label>
+                    </div>
+                </div>
+
+                <!-- Soal 20 -->
+                <div class="space-y-2 pb-2">
+                    <p class="text-xs font-medium text-slate-700">20. Pada penguji simulator PackeTTrino, perbedaan visual yang mencolok saat pengiriman data dari PC-1 ke PC-2 pada Switch vs Hub adalah...</p>
+                    <div class="space-y-1 pl-2 text-xs text-slate-600">
+                        <label class="block"><input type="radio" name="pg20" value="A" class="mr-2"> A. Hub mengirimkan amplop paket ke semua PC, Switch hanya mengirim ke PC-2</label>
+                        <label class="block"><input type="radio" name="pg20" value="B" class="mr-2"> B. Hub mengirim ke PC-2 saja, Switch menyebar ke seluruh PC</label>
+                        <label class="block"><input type="radio" name="pg20" value="C" class="mr-2"> C. Hub mengubah warna kabel menjadi merah</label>
+                        <label class="block"><input type="radio" name="pg20" value="D" class="mr-2"> D. Switch tidak menampilkan animasi paket</label>
+                        <label class="block"><input type="radio" name="pg20" value="E" class="mr-2"> E. Hub membatalkan seluruh paket ping</label>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Tombol Kirim -->
+            <div class="flex justify-end gap-3 pb-8">
+                <button onclick="resetForm()" class="bg-slate-200 hover:bg-slate-300 text-slate-700 text-xs font-semibold px-4 py-2.5 rounded-xl transition-colors">
+                    Reset Form
+                </button>
+                <button onclick="simpanDanKirimKeSheet()" id="btnKirim" class="bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold px-5 py-2.5 rounded-xl transition-colors flex items-center gap-2 shadow-sm">
+                    <i class="fa-solid fa-cloud-arrow-up"></i> Selesaikan & Kirim LKPD
+                </button>
+            </div>
+
+        </div>
+
+    </main>
+
+    <!-- Custom Modal Notification -->
+    <div id="customModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-xs hidden items-center justify-center p-4 z-50">
+        <div class="bg-white rounded-2xl max-w-sm w-full p-6 shadow-xl text-center space-y-4">
+            <div id="modalIcon" class="w-12 h-12 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto text-xl">
+                <i class="fa-solid fa-check"></i>
+            </div>
+            <h3 id="modalTitle" class="font-bold text-slate-800 text-base">Berhasil!</h3>
+            <p id="modalMessage" class="text-xs text-slate-600 leading-relaxed">Pesan notifikasi sistem.</p>
+            <button onclick="tutupModal()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold py-2.5 rounded-xl transition-colors">
+                Tutup
+            </button>
+        </div>
+    </div>
+
+    <script>
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwHbIXeAGuTb62eAGFxV6CZ9lAeoAMZSkif3qP3KhKvC_uGWAncDmd48jK9H9Q5OtwGtQ/exec"; 
+        let waktuMulai = 0;
+        let masterDataSiswa = [];
+        
+        const csvDataSiswa = `Sekolah,Kelas,Nama Lengkap
+SMK NEGERI 1 SINGKAWANG,X TJK,01 ALVINO
+SMK NEGERI 1 SINGKAWANG,X TJK,02 DEBORA RATU GIASTA GULTOM
+SMK NEGERI 1 SINGKAWANG,X TJK,03 DENIS
+SMK NEGERI 1 SINGKAWANG,X TJK,04 DEO REVALDY AHMAD
+SMK NEGERI 1 SINGKAWANG,X TJK,05 EVAN KRESNA LEE
+SMK NEGERI 1 SINGKAWANG,X TJK,06 FEBRIYANTO
+SMK NEGERI 1 SINGKAWANG,X TJK,07 HERKULANUS PERDY
+SMK NEGERI 1 SINGKAWANG,X TJK,08 HIQMAL LIONEL ALVIANO
+SMK NEGERI 1 SINGKAWANG,X TJK,09 INDRA KESUMAH
+SMK NEGERI 1 SINGKAWANG,X TJK,10 JERRY KURNIAWAN
+SMK NEGERI 1 SINGKAWANG,X TJK,11 KABILA SYIFA
+SMK NEGERI 1 SINGKAWANG,X TJK,12 KEYLA KIRANA PUTRI
+SMK NEGERI 1 SINGKAWANG,X TJK,13 KRISTIAN DAFI
+SMK NEGERI 1 SINGKAWANG,X TJK,14 LIONEL VAN EXAUDI HUTABARAT
+SMK NEGERI 1 SINGKAWANG,X TJK,15 MIRATUL TASYA RAMADHANI
+SMK NEGERI 1 SINGKAWANG,X TJK,16 MUHAMMAD RAYHAN AL GHIFARY
+SMK NEGERI 1 SINGKAWANG,X TJK,17 MUHAMMAD ZAKY RAFANANDO
+SMK NEGERI 1 SINGKAWANG,X TJK,18 NATARI KEYZA JUNIAR
+SMK NEGERI 1 SINGKAWANG,X TJK,19 NAZUA KASTINA
+SMK NEGERI 1 SINGKAWANG,X TJK,20 NUR AZANI
+SMK NEGERI 1 SINGKAWANG,X TJK,21 NURAINI
+SMK NEGERI 1 SINGKAWANG,X TJK,22 PIRANDA RAMADANI
+SMK NEGERI 1 SINGKAWANG,X TJK,23 REBHELIA
+SMK NEGERI 1 SINGKAWANG,X TJK,24 REVAN
+SMK NEGERI 1 SINGKAWANG,X TJK,25 RIA ADHA
+SMK NEGERI 1 SINGKAWANG,X TJK,26 RINDU PRANITA NUARI
+SMK NEGERI 1 SINGKAWANG,X TJK,27 RIVALDO RANGGA SAPUTRA
+SMK NEGERI 1 SINGKAWANG,X TJK,28 SELVIA
+SMK NEGERI 1 SINGKAWANG,X TJK,29 SITI MARIYAM
+SMK NEGERI 1 SINGKAWANG,X TJK,30 SYIFA FAHIRA
+SMK NEGERI 1 SINGKAWANG,X TJK,31 WULANDARI
+SMK NEGERI 1 SINGKAWANG,X TJK,32 YULIANTI
+SMK NEGERI 1 SINGKAWANG,X TJK,33 YUNKHI
+SMK NEGERI 1 SINGKAWANG,XI TJK,01 RIZKY JUNIANSYAH
+SMK NEGERI 1 SINGKAWANG,XI TJK,02 SEMELIA
+SMK NEGERI 1 SINGKAWANG,XI TJK,03 AHMAD NOVA RIANTO
+SMK NEGERI 1 SINGKAWANG,XI TJK,04 AIDANAZMAN DATINOV
+SMK NEGERI 1 SINGKAWANG,XI TJK,05 AJI SOPYAN DWI
+SMK NEGERI 1 SINGKAWANG,XI TJK,06 ANGELA DARA LISTA
+SMK NEGERI 1 SINGKAWANG,XI TJK,07 ANNISA SALSA SHAFIRA
+SMK NEGERI 1 SINGKAWANG,XI TJK,09 AYRA
+SMK NEGERI 1 SINGKAWANG,XI TJK,10 AZURA
+SMK NEGERI 1 SINGKAWANG,XI TJK,11 BAYU CITRA PRATAMA
+SMK NEGERI 1 SINGKAWANG,XI TJK,12 BUNGA LESTARI
+SMK NEGERI 1 SINGKAWANG,XI TJK,13 CHASTLE ALPHA RICHIE
+SMK NEGERI 1 SINGKAWANG,XI TJK,14 DEVINA YUNA
+SMK NEGERI 1 SINGKAWANG,XI TJK,15 DINDA PUTRI RAHAYU
+SMK NEGERI 1 SINGKAWANG,XI TJK,16 EDWIN PRAYOGA
+SMK NEGERI 1 SINGKAWANG,XI TJK,17 FAJAR JULIANSYAH
+SMK NEGERI 1 SINGKAWANG,XI TJK,18 FRANSISCO DWI ADITYA
+SMK NEGERI 1 SINGKAWANG,XI TJK,19 GABRIEL ARESTA
+SMK NEGERI 1 SINGKAWANG,XI TJK,20 GLORIA ELSIA
+SMK NEGERI 1 SINGKAWANG,XI TJK,21 IHSAN AZHALLAH FAWWAZ
+SMK NEGERI 1 SINGKAWANG,XI TJK,22 INDRAYANI
+SMK NEGERI 1 SINGKAWANG,XI TJK,23 IRFAN RACHMANDANI FERDIAN
+SMK NEGERI 1 SINGKAWANG,XI TJK,24 KEVIN APRILIO
+SMK NEGERI 1 SINGKAWANG,XI TJK,25 KHOIRUNNISA
+SMK NEGERI 1 SINGKAWANG,XI TJK,26 LAFYCA CALYZZA
+SMK NEGERI 1 SINGKAWANG,XI TJK,27 MAHLIK ADI SAPUTRA
+SMK NEGERI 1 SINGKAWANG,XI TJK,28 MUHAMAD ADHA NUR IKHSAN
+SMK NEGERI 1 SINGKAWANG,XI TJK,29 MUHAMMAD NABIL PASHA
+SMK NEGERI 1 SINGKAWANG,XI TJK,30 NURLILA FADILLA
+SMK NEGERI 1 SINGKAWANG,XI TJK,31 RENI
+SMK NEGERI 1 SINGKAWANG,XI TJK,32 RIA KURNIATI
+SMK NEGERI 1 SINGKAWANG,XI TJK,33 RIDWAN RAKA HARTONO
+SMK NEGERI 1 SINGKAWANG,XI TJK,34 SAEPUL MAJID
+SMK NEGERI 1 SINGKAWANG,XI TJK,35 VIONA
+SMK NEGERI 1 SINGKAWANG,XI TJK,36 WAHYU
+SMK MUDITA SINGKAWANG,XI TJKT,01 ALICIA JENIFER
+SMK MUDITA SINGKAWANG,XI TJKT,02 ANGELA
+SMK MUDITA SINGKAWANG,XI TJKT,03 CALVINIUS BUNARTO
+SMK MUDITA SINGKAWANG,XI TJKT,04 CHELSY VEROSSA
+SMK MUDITA SINGKAWANG,XI TJKT,05 DERMAN JOHAN
+SMK MUDITA SINGKAWANG,XI TJKT,06 DESTIAN WIJAYA
+SMK MUDITA SINGKAWANG,XI TJKT,07 DISON NIKANOR
+SMK MUDITA SINGKAWANG,XI TJKT,08 ENNIO EDWARD
+SMK MUDITA SINGKAWANG,XI TJKT,09 FANI VANESA
+SMK MUDITA SINGKAWANG,XI TJKT,10 HANNY PHANGGESTY
+SMK MUDITA SINGKAWANG,XI TJKT,11 HERWIT BRIAN
+SMK MUDITA SINGKAWANG,XI TJKT,12 JAVI YANTO
+SMK MUDITA SINGKAWANG,XI TJKT,13 JEFRY
+SMK MUDITA SINGKAWANG,XI TJKT,14 JONATHAN VINCENTIUS
+SMK MUDITA SINGKAWANG,XI TJKT,15 KELLY ANGELA
+SMK MUDITA SINGKAWANG,XI TJKT,16 KEVIN KURNIAWAN
+SMK MUDITA SINGKAWANG,XI TJKT,17 LEONARDO
+SMK MUDITA SINGKAWANG,XI TJKT,18 LORENZO JONATHAN PANGESTU
+SMK MUDITA SINGKAWANG,XI TJKT,19 MEDY SANJAYA
+SMK MUDITA SINGKAWANG,XI TJKT,20 MEYCHEN CARNELLA
+SMK MUDITA SINGKAWANG,XI TJKT,21 MICHELLE
+SMK MUDITA SINGKAWANG,XI TJKT,22 NESHA FREDELINA XHIAUW
+SMK MUDITA SINGKAWANG,XI TJKT,23 RAYMEND
+SMK MUDITA SINGKAWANG,XI TJKT,24 RICARDO
+SMK MUDITA SINGKAWANG,XI TJKT,25 SUYANBUN LIPFIANDY
+SMK MUDITA SINGKAWANG,XI TJKT,26 TRI WIJAYA
+SMK MUDITA SINGKAWANG,XI TJKT,27 VINCENT
+SMK MUDITA SINGKAWANG,XI TJKT,28 VINCENT ALBERTO FEROZ
+SMK MUDITA SINGKAWANG,XI TJKT,29 VINCENT BUN
+SMK MUDITA SINGKAWANG,XI TJKT,30 VINCENT LAUNARDY
+SMK MUDITA SINGKAWANG,XI TJKT,31 VINSEN
+SMK MUDITA SINGKAWANG,XI TJKT,32 VITO ALBERT FEROZ
+SMK MUDITA SINGKAWANG,XI TJKT,33 VITON
+SMK MUDITA SINGKAWANG,XI TJKT,34 WENNI NINGSI WONGSO
+SMK MUDITA SINGKAWANG,XI TJKT,35 WILLIAM
+SMK MUDITA SINGKAWANG,XI TJKT,36 WILLIAM
+SMK MUDITA SINGKAWANG,XI TJKT,37 WILLIAM
+SMK MUDITA SINGKAWANG,XI TJKT,38 YUVENSIUS
+SMK MUDITA SINGKAWANG,XII TJKT,01 DALVIN ANDERSON
+SMK MUDITA SINGKAWANG,XII TJKT,02 DANNIEL DAVE DAISUKE
+SMK MUDITA SINGKAWANG,XII TJKT,03 DENNY
+SMK MUDITA SINGKAWANG,XII TJKT,04 FERDI NOVENDI
+SMK MUDITA SINGKAWANG,XII TJKT,05 FLOURA
+SMK MUDITA SINGKAWANG,XII TJKT,06 HENGKY
+SMK MUDITA SINGKAWANG,XII TJKT,07 JIU PHEN
+SMK MUDITA SINGKAWANG,XII TJKT,08 JULIANA DELVI WANTRIANI
+SMK MUDITA SINGKAWANG,XII TJKT,09 JULIYANTO
+SMK MUDITA SINGKAWANG,XII TJKT,10 JUN KIUH
+SMK MUDITA SINGKAWANG,XII TJKT,11 JUN PHEN
+SMK MUDITA SINGKAWANG,XII TJKT,12 JUNIATY
+SMK MUDITA SINGKAWANG,XII TJKT,14 KELVIN TERRENCE
+SMK MUDITA SINGKAWANG,XII TJKT,15 LEONARDO
+SMK MUDITA SINGKAWANG,XII TJKT,16 LEWIS MARCO
+SMK MUDITA SINGKAWANG,XII TJKT,17 LI NA
+SMK MUDITA SINGKAWANG,XII TJKT,18 MARCO GENIUS
+SMK MUDITA SINGKAWANG,XII TJKT,19 NELSON ALVARO
+SMK MUDITA SINGKAWANG,XII TJKT,21 NOFIKA
+SMK MUDITA SINGKAWANG,XII TJKT,22 NYIAN BUN
+SMK MUDITA SINGKAWANG,XII TJKT,23 NYUN CU
+SMK MUDITA SINGKAWANG,XII TJKT,24 OKTAVIANI
+SMK MUDITA SINGKAWANG,XII TJKT,25 RENDI
+SMK MUDITA SINGKAWANG,XII TJKT,26 RICO WIJAYA
+SMK MUDITA SINGKAWANG,XII TJKT,27 SI WEN
+SMK MUDITA SINGKAWANG,XII TJKT,28 SIAU KHIM
+SMK MUDITA SINGKAWANG,XII TJKT,29 SU CHUI
+SMK MUDITA SINGKAWANG,XII TJKT,30 TRI DERMERSIA
+SMK MUDITA SINGKAWANG,XII TJKT,31 VELIYAN VINSON
+SMK MUDITA SINGKAWANG,XII TJKT,32 VICKA ANJELICA
+SMK MUDITA SINGKAWANG,XII TJKT,33 WILLIAM
+SMK MUDITA SINGKAWANG,XII TJKT,34 WILLSON HANATA
+SMK MUDITA SINGKAWANG,XII TJKT,35 WILLY VEN`;
+        
+        window.addEventListener('DOMContentLoaded', () => {
+            const baris = csvDataSiswa.trim().split('\n');
+            masterDataSiswa = [];
+            
+            for(let i = 1; i < baris.length; i++) {
+                const kolom = baris[i].split(',');
+                if(kolom.length >= 3) {
+                    masterDataSiswa.push({
+                        sekolah: kolom[0].trim(),
+                        kelas: kolom[1].trim(),
+                        nama: kolom[2].trim()
+                    });
+                }
+            }
+            
+            inisialisasiDropdownSekolah();
+        });
+
+        function inisialisasiDropdownSekolah() {
+            const selectSekolah = document.getElementById('inputSekolah');
+            const sekolahTerpilihSebelumnya = selectSekolah.value;
+            const sekolahUnik = [...new Set(masterDataSiswa.map(item => item.sekolah))];
+            
+            selectSekolah.innerHTML = '<option value="">-- Pilih Sekolah --</option>';
+            sekolahUnik.forEach(sekolah => {
+                const opt = document.createElement('option');
+                opt.value = sekolah;
+                opt.textContent = sekolah;
+                selectSekolah.appendChild(opt);
+            });
+
+            if (sekolahTerpilihSebelumnya) {
+                selectSekolah.value = sekolahTerpilihSebelumnya;
+            }
+        }
+
+        function filterKelas() {
+            const sekolahDipilih = document.getElementById('inputSekolah').value;
+            const selectKelas = document.getElementById('inputKelas');
+            const selectNama = document.getElementById('inputNamaLengkap');
+            
+            selectKelas.innerHTML = '<option value="">-- Pilih Kelas --</option>';
+            selectNama.innerHTML = '<option value="">-- Pilih Nama --</option>';
+            
+            if (!sekolahDipilih) return;
+
+            const kelasUnik = [...new Set(masterDataSiswa.filter(item => item.sekolah === sekolahDipilih).map(item => item.kelas))];
+            kelasUnik.forEach(kelas => {
+                const opt = document.createElement('option');
+                opt.value = kelas;
+                opt.textContent = kelas;
+                selectKelas.appendChild(opt);
+            });
+        }
+
+        function filterNama() {
+            const sekolahDipilih = document.getElementById('inputSekolah').value;
+            const kelasDipilih = document.getElementById('inputKelas').value;
+            const selectNama = document.getElementById('inputNamaLengkap');
+            
+            selectNama.innerHTML = '<option value="">-- Pilih Nama --</option>';
+            
+            if (!kelasDipilih) return;
+
+            const listNama = masterDataSiswa.filter(item => item.sekolah === sekolahDipilih && item.kelas === kelasDipilih);
+            listNama.forEach(item => {
+                const opt = document.createElement('option');
+                opt.value = item.nama;
+                opt.textContent = item.nama;
+                selectNama.appendChild(opt);
+            });
+        }
+
+        // Kunci Jawaban Soal Pilihan Ganda LKPD 2
+        const kunciPG = {
+            pg1: "C", pg2: "B", pg3: "C", pg4: "B", pg5: "B",
+            pg6: "C", pg7: "B", pg8: "C", pg9: "B", pg10: "B",
+            pg11: "C", pg12: "A", pg13: "B", pg14: "B", pg15: "B",
+            pg16: "B", pg17: "B", pg18: "B", pg19: "B", pg20: "A"
+        };
+
+        function simpanIdentitas() {
+            const sekolah = document.getElementById('inputSekolah').value;
+            const nama = document.getElementById('inputNamaLengkap').value;
+            const kelas = document.getElementById('inputKelas').value;
+            
+            if (!sekolah || !kelas || !nama) {
+                tampilkanModal("Peringatan", "Mohon lengkapi Sekolah, Kelas, dan Nama Lengkap terlebih dahulu!", "warning");
+                return;
+            }
+
+            document.getElementById('displayNama').textContent = `${nama} (${sekolah} - ${kelas})`;
+            document.getElementById('mainContent').classList.remove('opacity-50', 'pointer-events-none');
+            document.getElementById('section-identitas').classList.add('bg-indigo-50/50', 'border-indigo-200');
+            
+            waktuMulai = Date.now();
+            tampilkanModal("Berhasil", `Identitas tersimpan untuk ${nama}. Selamat mengerjakan LKPD 2!`, "success");
+        }
+
+        function simpanDanKirimKeSheet() {
+            const sekolah = document.getElementById('inputSekolah').value;
+            const nama = document.getElementById('inputNamaLengkap').value.trim();
+            const kelas = document.getElementById('inputKelas').value;
+
+            if (!sekolah || !nama || !kelas) {
+                tampilkanModal("Peringatan", "Identitas Sekolah, Nama, dan Kelas belum lengkap diisi!", "warning");
+                return;
+            }
+
+            let skorBenar = 0;
+            for (let i = 1; i <= 20; i++) {
+                const radios = document.getElementsByName(`pg${i}`);
+                let selected = "";
+                for (const r of radios) {
+                    if (r.checked) {
+                        selected = r.value;
+                        break;
+                    }
+                }
+                if (selected === kunciPG[`pg${i}`]) {
+                    skorBenar++;
+                }
+            }
+
+            const durasiDetik = waktuMulai ? Math.floor((Date.now() - waktuMulai) / 1000) : 0;
+            const nilaiAkhir = skorBenar * 5; 
+            
+            let pilihanLkpdTerpilih = "LKPD 2 (Hub vs Switch Topologi Star)";
+            const radioLkpd = document.getElementById('pilihanLkpd');
+            if (radioLkpd && radioLkpd.checked) {
+                pilihanLkpdTerpilih = radioLkpd.value;
+            }
+
+            const payload = {
+                sekolah: sekolah,
+                nama_lengkap: nama,
+                pilihan_lkpd: pilihanLkpdTerpilih, 
+                kelas: kelas,
+                durasi_detik: durasiDetik,
+                skor_pg_benar: skorBenar,
+                nilai_akhir: nilaiAkhir
+            };
+
+            const btn = document.getElementById('btnKirim');
+            btn.innerHTML = `<i class="fa-solid fa-spinner animate-spin"></i> Mengirim...`;
+            btn.disabled = true;
+
+            fetch(SCRIPT_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                redirect: 'follow',
+                headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                body: JSON.stringify(payload)
+            })
+            .then(() => {
+                tampilkanModal("Berhasil!", `LKPD 2 berhasil dikirim!\nNama: ${nama}\nSkor Pilihan Ganda: ${skorBenar} (${nilaiAkhir})`, "success");
+                btn.innerHTML = `<i class="fa-solid fa-check"></i> Terkirim`;
+            })
+            .catch(err => {
+                console.warn("Fetch POST error:", err);
+                tampilkanModal("Berhasil / Terkirim", `Pengiriman data diproses oleh sistem!\nNama: ${nama}\nSkor Anda: ${skorBenar} (${nilaiAkhir})`, "success");
+                btn.innerHTML = `<i class="fa-solid fa-check"></i> Selesai`;
+            });
+        }
+
+        function resetForm() {
+            if (window.confirm("Reset seluruh jawaban dan form LKPD 2?")) {
+                location.reload();
+            }
+        }
+
+        function tampilkanModal(judul, pesan, tipe) {
+            const modal = document.getElementById('customModal');
+            document.getElementById('modalTitle').textContent = judul;
+            document.getElementById('modalMessage').textContent = pesan;
+            
+            const icon = document.getElementById('modalIcon');
+            if (tipe === 'success') {
+                icon.className = "w-12 h-12 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto text-xl";
+                icon.innerHTML = `<i class="fa-solid fa-check"></i>`;
+            } else if (tipe === 'warning') {
+                icon.className = "w-12 h-12 rounded-full bg-amber-100 text-amber-600 flex items-center justify-center mx-auto text-xl";
+                icon.innerHTML = `<i class="fa-solid fa-triangle-exclamation"></i>`;
+            } else {
+                icon.className = "w-12 h-12 rounded-full bg-rose-100 text-rose-600 flex items-center justify-center mx-auto text-xl";
+                icon.innerHTML = `<i class="fa-solid fa-xmark"></i>`;
+            }
+
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function tutupModal() {
+            const modal = document.getElementById('customModal');
+            modal.classList.remove('flex');
+            modal.classList.add('hidden');
+        }
+    </script>
+</body>
+</html>

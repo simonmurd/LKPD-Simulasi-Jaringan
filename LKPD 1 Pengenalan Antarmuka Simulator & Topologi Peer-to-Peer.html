@@ -1,0 +1,864 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LKPD 1: Pengenalan Antarmuka Simulator & Topologi Peer-to-Peer</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans antialiased min-h-screen flex flex-col">
+
+    <header class="bg-indigo-600 text-white shadow-md">
+        <div class="max-w-5xl mx-auto px-4 py-4 flex flex-col sm:flex-row justify-between items-center gap-2">
+            <div>
+                <h1 class="text-xl font-bold mt-1">LKPD 1 : Pengenalan Antarmuka Simulator & Topologi Peer-to-Peer</h1>
+            </div>
+            <div class="text-sm bg-indigo-700/60 px-3 py-1.5 rounded-lg border border-indigo-500">
+                <i class="fa-solid fa-user-graduate mr-1.5"></i> <span id="displayNama">Siswa Praktikan</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-grow max-w-5xl w-full mx-auto p-4 sm:p-6 space-y-6">
+
+        <!-- Identitas Siswa -->
+        <section class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200" id="section-identitas">
+            <h2 class="text-base font-bold text-slate-700 mb-3 flex items-center gap-2">
+                <i class="fa-solid fa-id-card text-indigo-600"></i> Identitas Peserta Didik
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                <div>
+                    <label class="block text-xs font-medium text-slate-500 mb-1">Pilih Sekolah</label>
+                    <select id="inputSekolah" onchange="filterKelas()" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white">
+                        <option value="">-- Pilih Sekolah --</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-slate-500 mb-1">Kelas</label>
+                    <select id="inputKelas" onchange="filterNama()" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white">
+                        <option value="">-- Pilih Kelas --</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-slate-500 mb-1">Nama Lengkap</label>
+                    <select id="inputNamaLengkap" class="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white">
+                        <option value="">-- Pilih Nama --</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="mb-4">
+                <label class="flex items-center space-x-2 cursor-pointer">
+                    <input type="radio" id="pilihanLkpd" name="pilihanLkpd" value="LKPD 1 (Peer-to-Peer PackeTTrino)" class="w-4 h-4 text-indigo-600 border-slate-300 focus:ring-indigo-500" checked>
+                    <span class="text-sm font-medium text-slate-700">LKPD 1 : Antarmuka Simulator & Topologi Peer-to-Peer</span>
+                </label>
+            </div>
+
+            <button onclick="simpanIdentitas()" class="mt-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors flex items-center gap-2">
+                <i class="fa-solid fa-check"></i> Mulai LKPD & Catat Waktu
+            </button>
+        </section>
+
+        <div id="mainContent" class="opacity-50 pointer-events-none transition-opacity duration-300 space-y-6">
+
+            <!-- Purpose and Tools -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
+                    <h3 class="font-bold text-slate-700 mb-2 flex items-center gap-2 text-sm">
+                        <i class="fa-solid fa-bullseye text-indigo-600"></i> Tujuan Pembelajaran
+                    </h3>
+                    <ul class="text-xs text-slate-600 space-y-1.5 list-disc list-inside">
+                        <li>Mengenal antarmuka dan tools pada simulator PackeTTrino.</li>
+                        <li>Memahami cara kerja media transmisi kabel untuk menghubungkan 2 PC.</li>
+                        <li>Menganalisis komunikasi data langsung antar dua komputer tanpa perantara (Peer-to-Peer).</li>
+                    </ul>
+                </div>
+                <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
+                    <h3 class="font-bold text-slate-700 mb-2 flex items-center gap-2 text-sm">
+                        <i class="fa-solid fa-toolbox text-indigo-600"></i> Perangkat & Tools
+                    </h3>
+                    <ul class="text-xs text-slate-600 space-y-1.5 list-disc list-inside">
+                        <li>Browser Web (PC/Laptop/Tablet).</li>
+                        <li>Simulator PackeTTrino (Embedded).</li>
+                        <li>Komponen Simulator: 2 Node PC, 1 Cable Tool.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Embedded PackeTTrino Simulator Section -->
+            <section class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="font-bold text-slate-700 text-sm flex items-center gap-2">
+                        <i class="fa-solid fa-network-wired text-indigo-600"></i> Simulator Live PackeTTrino
+                    </h3>
+                    <span class="text-xs bg-emerald-100 text-emerald-800 font-medium px-2.5 py-0.5 rounded-full">Interactive Workspace</span>
+                </div>
+                <p class="text-xs text-slate-500 mb-4">Gunakan simulator di bawah ini untuk membuat topologi Peer-to-Peer (Tambahkan 2 PC, sambungkan dengan Cable Tool, atur IP Address, dan lakukan tes Ping).</p>
+
+                <div class="w-full h-[550px] rounded-xl overflow-hidden border border-slate-300 shadow-inner bg-slate-900">
+                    <iframe src="https://simonmurd.github.io/PackeTTrino" class="w-full h-full border-0" allow="fullscreen"></iframe>
+                </div>
+            </section>
+
+            <!-- Tabel Pengamatan -->
+            <section class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
+                <h3 class="font-bold text-slate-700 mb-3 text-sm flex items-center gap-2">
+                    <i class="fa-solid fa-table text-indigo-600"></i> Lembar Tabel Pengamatan Praktikum (10 Item)
+                </h3>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-xs border-collapse">
+                        <thead>
+                            <tr class="bg-slate-100 text-slate-700">
+                                <th class="p-2.5 border border-slate-200">No</th>
+                                <th class="p-2.5 border border-slate-200">Langkah / Aktivitas Simulasi</th>
+                                <th class="p-2.5 border border-slate-200">Konfigurasi / Parameter</th>
+                                <th class="p-2.5 border border-slate-200">Hasil Pengamatan</th>
+                                <th class="p-2.5 border border-slate-200">Keterangan Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabelPengamatanBody">
+                            <tr>
+                                <td class="p-2.5 border border-slate-200 text-center font-medium">1</td>
+                                <td class="p-2.5 border border-slate-200"><input type="text" class="w-full bg-transparent border-b border-slate-300 focus:outline-none" value="Menambahkan Perangkat PC-1"></td>
+                                <td class="p-2.5 border border-slate-200"><input type="text" class="w-full bg-transparent border-b border-slate-300 focus:outline-none" value="Node PC"></td>
+                                <td class="p-2.5 border border-slate-200"><input type="text" class="w-full bg-transparent border-b border-slate-300 focus:outline-none" placeholder="PC-1 tampil di canvas"></td>
+                                <td class="p-2.5 border border-slate-200"><input type="text" class="w-full bg-transparent border-b border-slate-300 focus:outline-none" placeholder="Berhasil"></td>
+                            </tr>
+                            <tr>
+                                <td class="p-2.5 border border-slate-200 text-center font-medium">2</td>
+                                <td class="p-2.5 border border-slate-200"><input type="text" class="w-full bg-transparent border-b border-slate-300 focus:outline-none" value="Menambahkan Perangkat PC-2"></td>
+                                <td class="p-2.5 border border-slate-200"><input type="text" class="w-full bg-transparent border-b border-slate-300 focus:outline-none" value="Node PC"></td>
+                                <td class="p-2.5 border border-slate-200"><input type="text" class="w-full bg-transparent border-b border-slate-300 focus:outline-none" placeholder="PC-2 tampil di canvas"></td>
+                                <td class="p-2.5 border border-slate-200"><input type="text" class="w-full bg-transparent border-b border-slate-300 focus:outline-none" placeholder="Berhasil"></td>
+                            </tr>
+                            <tr>
+                                <td class="p-2.5 border border-slate-200 text-center font-medium">3</td>
+                                <td class="p-2.5 border border-slate-200"><input type="text" class="w-full bg-transparent border-b border-slate-300 focus:outline-none" value="Menghubungkan Kabel PC1 - PC2"></td>
+                                <td class="p-2.5 border border-slate-200"><input type="text" class="w-full bg-transparent border-b border-slate-300 focus:outline-none" value="Cable Tool"></td>
+                                <td class="p-2.5 border border-slate-200"><input type="text" class="w-full bg-transparent border-b border-slate-300 focus:outline-none" placeholder="Garis kabel terhubung"></td>
+                                <td class="p-2.5 border border-slate-200"><input type="text" class="w-full bg-transparent border-b border-slate-300 focus:outline-none" placeholder="Terhubung"></td>
+                            </tr>
+                            <tr>
+                                <td class="p-2.5 border border-slate-200 text-center font-medium">4</td>
+                                <td class="p-2.5 border border-slate-200"><input type="text" class="w-full bg-transparent border-b border-slate-300 focus:outline-none" value="Setting IP Address PC-1"></td>
+                                <td class="p-2.5 border border-slate-200"><input type="text" class="w-full bg-transparent border-b border-slate-300 focus:outline-none" value="192.168.1.1 / 255.255.255.0"></td>
+                                <td class="p-2.5 border border-slate-200"><input type="text" class="w-full bg-transparent border-b border-slate-300 focus:outline-none" placeholder="IP tersimpan di PC-1"></td>
+                                <td class="p-2.5 border border-slate-200"><input type="text" class="w-full bg-transparent border-b border-slate-300 focus:outline-none" placeholder="Aktif"></td>
+                            </tr>
+                            <tr>
+                                <td class="p-2.5 border border-slate-200 text-center font-medium">5</td>
+                                <td class="p-2.5 border border-slate-200"><input type="text" class="w-full bg-transparent border-b border-slate-300 focus:outline-none" value="Setting IP Address PC-2"></td>
+                                <td class="p-2.5 border border-slate-200"><input type="text" class="w-full bg-transparent border-b border-slate-300 focus:outline-none" value="192.168.1.2 / 255.255.255.0"></td>
+                                <td class="p-2.5 border border-slate-200"><input type="text" class="w-full bg-transparent border-b border-slate-300 focus:outline-none" placeholder="IP tersimpan di PC-2"></td>
+                                <td class="p-2.5 border border-slate-200"><input type="text" class="w-full bg-transparent border-b border-slate-300 focus:outline-none" placeholder="Aktif"></td>
+                            </tr>
+                            <tr>
+                                <td class="p-2.5 border border-slate-200 text-center font-medium">6</td>
+                                <td class="p-2.5 border border-slate-200"><input type="text" class="w-full bg-transparent border-b border-slate-300 focus:outline-none" value="Ping dari PC-1 ke PC-2"></td>
+                                <td class="p-2.5 border border-slate-200"><input type="text" class="w-full bg-transparent border-b border-slate-300 focus:outline-none" value="ping 192.168.1.2"></td>
+                                <td class="p-2.5 border border-slate-200"><input type="text" class="w-full bg-transparent border-b border-slate-300 focus:outline-none" placeholder="Reply from 192.168.1.2"></td>
+                                <td class="p-2.5 border border-slate-200"><input type="text" class="w-full bg-transparent border-b border-slate-300 focus:outline-none" placeholder="Sukses"></td>
+                            </tr>
+                            <tr>
+                                <td class="p-2.5 border border-slate-200 text-center font-medium">7</td>
+                                <td class="p-2.5 border border-slate-200"><input type="text" class="w-full bg-transparent border-b border-slate-300 focus:outline-none" value="Ping dari PC-2 ke PC-1"></td>
+                                <td class="p-2.5 border border-slate-200"><input type="text" class="w-full bg-transparent border-b border-slate-300 focus:outline-none" value="ping 192.168.1.1"></td>
+                                <td class="p-2.5 border border-slate-200"><input type="text" class="w-full bg-transparent border-b border-slate-300 focus:outline-none" placeholder="Reply from 192.168.1.1"></td>
+                                <td class="p-2.5 border border-slate-200"><input type="text" class="w-full bg-transparent border-b border-slate-300 focus:outline-none" placeholder="Sukses"></td>
+                            </tr>
+                            <tr>
+                                <td class="p-2.5 border border-slate-200 text-center font-medium">8</td>
+                                <td class="p-2.5 border border-slate-200"><input type="text" class="w-full bg-transparent border-b border-slate-300 focus:outline-none" value="Pengamatan Animasi Paket ARP & ICMP"></td>
+                                <td class="p-2.5 border border-slate-200"><input type="text" class="w-full bg-transparent border-b border-slate-300 focus:outline-none" value="Mode Simulasi"></td>
+                                <td class="p-2.5 border border-slate-200"><input type="text" class="w-full bg-transparent border-b border-slate-300 focus:outline-none" placeholder="Paket bergerak antar PC"></td>
+                                <td class="p-2.5 border border-slate-200"><input type="text" class="w-full bg-transparent border-b border-slate-300 focus:outline-none" placeholder="Normal"></td>
+                            </tr>
+                            <tr>
+                                <td class="p-2.5 border border-slate-200 text-center font-medium">9</td>
+                                <td class="p-2.5 border border-slate-200"><input type="text" class="w-full bg-transparent border-b border-slate-300 focus:outline-none" value="Uji Ping ke IP yang tidak ada"></td>
+                                <td class="p-2.5 border border-slate-200"><input type="text" class="w-full bg-transparent border-b border-slate-300 focus:outline-none" value="ping 192.168.1.99"></td>
+                                <td class="p-2.5 border border-slate-200"><input type="text" class="w-full bg-transparent border-b border-slate-300 focus:outline-none" placeholder="Request Timed Out"></td>
+                                <td class="p-2.5 border border-slate-200"><input type="text" class="w-full bg-transparent border-b border-slate-300 focus:outline-none" placeholder="RTO / Gagal"></td>
+                            </tr>
+                            <tr>
+                                <td class="p-2.5 border border-slate-200 text-center font-medium">10</td>
+                                <td class="p-2.5 border border-slate-200"><input type="text" class="w-full bg-transparent border-b border-slate-300 focus:outline-none" value="Uji Ping Beda Subnet (Tanpa Router)"></td>
+                                <td class="p-2.5 border border-slate-200"><input type="text" class="w-full bg-transparent border-b border-slate-300 focus:outline-none" value="PC1:192.168.1.1 -> PC2:10.0.0.1"></td>
+                                <td class="p-2.5 border border-slate-200"><input type="text" class="w-full bg-transparent border-b border-slate-300 focus:outline-none" placeholder="Request Timed Out / Destination Unreachable"></td>
+                                <td class="p-2.5 border border-slate-200"><input type="text" class="w-full bg-transparent border-b border-slate-300 focus:outline-none" placeholder="Gagal"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Pertanyaan Analisis -->
+            <section class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 space-y-4">
+                <h3 class="font-bold text-slate-700 text-sm flex items-center gap-2">
+                    <i class="fa-solid fa-clipboard-question text-indigo-600"></i> Pertanyaan Analisis & Evaluasi (10 Item)
+                </h3>
+                
+                <div>
+                    <label class="block text-xs font-medium text-slate-600 mb-1">1. Apa yang dimaksud dengan jaringan komputer dengan topologi **Peer-to-Peer (P2P)**?</label>
+                    <textarea id="ans1" rows="2" class="w-full px-3 py-2 text-xs border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Tuliskan jawaban analisis Anda di sini..."></textarea>
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-slate-600 mb-1">2. Mengapa dalam simulasi kali ini dua buah PC dapat terhubung secara langsung menggunakan *Cable Tool* tanpa menggunakan *Switch* atau *Hub*?</label>
+                    <textarea id="ans2" rows="2" class="w-full px-3 py-2 text-xs border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Tuliskan jawaban analisis Anda di sini..."></textarea>
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-slate-600 mb-1">3. Jelaskan fungsi dari pemberian IP Address (*Internet Protocol Address*) pada masing-masing PC dalam jaringan Peer-to-Peer!</label>
+                    <textarea id="ans3" rows="2" class="w-full px-3 py-2 text-xs border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Tuliskan jawaban analisis Anda di sini..."></textarea>
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-slate-600 mb-1">4. Berdasarkan pengamatan animasi paket di PackeTTrino, paket protokol apakah yang dikirimkan pertama kali sebelum paket ICMP (ping) berjalan?</label>
+                    <textarea id="ans4" rows="2" class="w-full px-3 py-2 text-xs border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Tuliskan jawaban analisis Anda di sini..."></textarea>
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-slate-600 mb-1">5. Mengapa IP Address kedua PC (misal: `192.168.1.1` dan `192.168.1.2`) harus berada dalam Subnet/Kelas yang sama agar dapat saling terhubung?</label>
+                    <textarea id="ans5" rows="2" class="w-full px-3 py-2 text-xs border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Tuliskan jawaban analisis Anda di sini..."></textarea>
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-slate-600 mb-1">6. Sebutkan kelebihan utama dari topologi jaringan Peer-to-Peer dibandingkan dengan jaringan berbasis Client-Server!</label>
+                    <textarea id="ans6" rows="2" class="w-full px-3 py-2 text-xs border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Tuliskan jawaban analisis Anda di sini..."></textarea>
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-slate-600 mb-1">7. Apa kekurangan atau keterbatasan utama topologi Peer-to-Peer jika diterapkan pada skala jaringan yang besar (misalnya 50 komputer)?</label>
+                    <textarea id="ans7" rows="2" class="w-full px-3 py-2 text-xs border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Tuliskan jawaban analisis Anda di sini..."></textarea>
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-slate-600 mb-1">8. Jika saat pengujian `ping` muncul pesan **"Request Timed Out" (RTO)** pada topologi Peer-to-Peer, sebutkan 3 hal yang harus Anda periksa!</label>
+                    <textarea id="ans8" rows="2" class="w-full px-3 py-2 text-xs border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Tuliskan jawaban analisis Anda di sini..."></textarea>
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-slate-600 mb-1">9. Mengapa media transmisi kabel (*Cable Tool*) sangat krusial dalam menghubungkan dua perangkat fisik pada jaringan lokal?</label>
+                    <textarea id="ans9" rows="2" class="w-full px-3 py-2 text-xs border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Tuliskan jawaban analisis Anda di sini..."></textarea>
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-slate-600 mb-1">10. Tuliskan kesimpulan menyeluruh mengenai hasil praktikum pembuatan topologi Peer-to-Peer menggunakan simulator hari ini!</label>
+                    <textarea id="ans10" rows="2" class="w-full px-3 py-2 text-xs border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Tuliskan kesimpulan praktikum di sini..."></textarea>
+                </div>
+            </section>
+
+            <!-- Soal Pilihan Ganda -->
+            <section class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 space-y-6">
+                <h3 class="font-bold text-slate-700 text-sm flex items-center gap-2">
+                    <i class="fa-solid fa-list-check text-indigo-600"></i> Soal Evaluasi Pilihan Ganda (20 Soal)
+                </h3>
+
+                <!-- Soal 1 -->
+                <div class="space-y-2 border-b border-slate-100 pb-4">
+                    <p class="text-xs font-medium text-slate-700">1. Apa karakteristik utama dari topologi jaringan Peer-to-Peer (P2P)?</p>
+                    <div class="space-y-1 pl-2 text-xs text-slate-600">
+                        <label class="block"><input type="radio" name="pg1" value="A" class="mr-2"> A. Terdiri dari satu server terpusat yang mengatur seluruh client</label>
+                        <label class="block"><input type="radio" name="pg1" value="B" class="mr-2"> B. Setiap komputer memiliki kedudukan yang setara tanpa server khusus</label>
+                        <label class="block"><input type="radio" name="pg1" value="C" class="mr-2"> C. Menggunakan kabel fiber optik utama melingkar seperti cincin</label>
+                        <label class="block"><input type="radio" name="pg1" value="D" class="mr-2"> D. Membutuhkan router khusus berkapasitas tinggi</label>
+                        <label class="block"><input type="radio" name="pg1" value="E" class="mr-2"> E. Tidak membutuhkan alamat IP pada perangkat yang terhubung</label>
+                    </div>
+                </div>
+
+                <!-- Soal 2 -->
+                <div class="space-y-2 border-b border-slate-100 pb-4">
+                    <p class="text-xs font-medium text-slate-700">2. Untuk menghubungkan dua komputer PC secara langsung pada jaringan P2P fisik, jenis kabel UTP yang digunakan secara standar adalah...</p>
+                    <div class="space-y-1 pl-2 text-xs text-slate-600">
+                        <label class="block"><input type="radio" name="pg2" value="A" class="mr-2"> A. Straight-through</label>
+                        <label class="block"><input type="radio" name="pg2" value="B" class="mr-2"> B. Coaxial</label>
+                        <label class="block"><input type="radio" name="pg2" value="C" class="mr-2"> C. Crossover</label>
+                        <label class="block"><input type="radio" name="pg2" value="D" class="mr-2"> D. Fiber Optic</label>
+                        <label class="block"><input type="radio" name="pg2" value="E" class="mr-2"> E. Console Cable</label>
+                    </div>
+                </div>
+
+                <!-- Soal 3 -->
+                <div class="space-y-2 border-b border-slate-100 pb-4">
+                    <p class="text-xs font-medium text-slate-700">3. Protokol yang digunakan untuk menguji konektivitas antar 2 PC melalui perintah `ping` adalah...</p>
+                    <div class="space-y-1 pl-2 text-xs text-slate-600">
+                        <label class="block"><input type="radio" name="pg3" value="A" class="mr-2"> A. TCP</label>
+                        <label class="block"><input type="radio" name="pg3" value="B" class="mr-2"> B. UDP</label>
+                        <label class="block"><input type="radio" name="pg3" value="C" class="mr-2"> C. ICMP</label>
+                        <label class="block"><input type="radio" name="pg3" value="D" class="mr-2"> D. HTTP</label>
+                        <label class="block"><input type="radio" name="pg3" value="E" class="mr-2"> E. FTP</label>
+                    </div>
+                </div>
+
+                <!-- Soal 4 -->
+                <div class="space-y-2 border-b border-slate-100 pb-4">
+                    <p class="text-xs font-medium text-slate-700">4. Pasangan IP Address manakah di bawah ini yang dapat saling terhubung langsung dalam satu jaringan lokal tanpa perantara router?</p>
+                    <div class="space-y-1 pl-2 text-xs text-slate-600">
+                        <label class="block"><input type="radio" name="pg4" value="A" class="mr-2"> A. 192.168.1.1 dan 10.0.0.1</label>
+                        <label class="block"><input type="radio" name="pg4" value="B" class="mr-2"> B. 192.168.1.1 dan 192.168.2.1</label>
+                        <label class="block"><input type="radio" name="pg4" value="C" class="mr-2"> C. 192.168.1.10 dan 192.168.1.20</label>
+                        <label class="block"><input type="radio" name="pg4" value="D" class="mr-2"> D. 172.16.0.1 dan 192.168.1.1</label>
+                        <label class="block"><input type="radio" name="pg4" value="E" class="mr-2"> E. 8.8.8.8 dan 192.168.1.1</label>
+                    </div>
+                </div>
+
+                <!-- Soal 5 -->
+                <div class="space-y-2 border-b border-slate-100 pb-4">
+                    <p class="text-xs font-medium text-slate-700">5. Sebelum paket ICMP dikirimkan ke target IP, perangkat pengirim butuh mengetahui MAC Address target melalui protokol...</p>
+                    <div class="space-y-1 pl-2 text-xs text-slate-600">
+                        <label class="block"><input type="radio" name="pg5" value="A" class="mr-2"> A. DNS</label>
+                        <label class="block"><input type="radio" name="pg5" value="B" class="mr-2"> B. ARP (Address Resolution Protocol)</label>
+                        <label class="block"><input type="radio" name="pg5" value="C" class="mr-2"> C. DHCP</label>
+                        <label class="block"><input type="radio" name="pg5" value="D" class="mr-2"> D. SNMP</label>
+                        <label class="block"><input type="radio" name="pg5" value="E" class="mr-2"> E. NAT</label>
+                    </div>
+                </div>
+
+                <!-- Soal 6 -->
+                <div class="space-y-2 border-b border-slate-100 pb-4">
+                    <p class="text-xs font-medium text-slate-700">6. Manakah keuntungan utama menggunakan topologi Peer-to-Peer untuk skala laboratorium kecil (2-3 PC)?</p>
+                    <div class="space-y-1 pl-2 text-xs text-slate-600">
+                        <label class="block"><input type="radio" name="pg6" value="A" class="mr-2"> A. Tingkat keamanan data terpusat paling baik</label>
+                        <label class="block"><input type="radio" name="pg6" value="B" class="mr-2"> B. Biaya pembuatan murah dan hemat tanpa perlu membeli Switch/Server</label>
+                        <label class="block"><input type="radio" name="pg6" value="C" class="mr-2"> C. Sangat mudah dikembangkan hingga ribuan perangkat</label>
+                        <label class="block"><input type="radio" name="pg6" value="D" class="mr-2"> D. Tidak membutuhkan kabel jaringan sama sekali</label>
+                        <label class="block"><input type="radio" name="pg6" value="E" class="mr-2"> E. Kecepatan transfer selalu berada di atas 10 Gbps</label>
+                    </div>
+                </div>
+
+                <!-- Soal 7 -->
+                <div class="space-y-2 border-b border-slate-100 pb-4">
+                    <p class="text-xs font-medium text-slate-700">7. Pada simulator PackeTTrino, alat/tool yang digunakan untuk menghubungkan dua node adalah...</p>
+                    <div class="space-y-1 pl-2 text-xs text-slate-600">
+                        <label class="block"><input type="radio" name="pg7" value="A" class="mr-2"> A. Router Tool</label>
+                        <label class="block"><input type="radio" name="pg7" value="B" class="mr-2"> B. Cable Tool</label>
+                        <label class="block"><input type="radio" name="pg7" value="C" class="mr-2"> C. Switch Tool</label>
+                        <label class="block"><input type="radio" name="pg7" value="D" class="mr-2"> D. Eraser Tool</label>
+                        <label class="block"><input type="radio" name="pg7" value="E" class="mr-2"> E. Wireless Tool</label>
+                    </div>
+                </div>
+
+                <!-- Soal 8 -->
+                <div class="space-y-2 border-b border-slate-100 pb-4">
+                    <p class="text-xs font-medium text-slate-700">8. Informasi TTL pada hasil keluaran perintah `ping` merupakan singkatan dari...</p>
+                    <div class="space-y-1 pl-2 text-xs text-slate-600">
+                        <label class="block"><input type="radio" name="pg8" value="A" class="mr-2"> A. Time To Link</label>
+                        <label class="block"><input type="radio" name="pg8" value="B" class="mr-2"> B. Time To Live</label>
+                        <label class="block"><input type="radio" name="pg8" value="C" class="mr-2"> C. Transfer Total Line</label>
+                        <label class="block"><input type="radio" name="pg8" value="D" class="mr-2"> D. Transmission Time Limit</label>
+                        <label class="block"><input type="radio" name="pg8" value="E" class="mr-2"> E. Target Total Latency</label>
+                    </div>
+                </div>
+
+                <!-- Soal 9 -->
+                <div class="space-y-2 border-b border-slate-100 pb-4">
+                    <p class="text-xs font-medium text-slate-700">9. Apa dampak buruk jika kabel jaringan yang menghubungkan PC1 dan PC2 pada topologi P2P terputus?</p>
+                    <div class="space-y-1 pl-2 text-xs text-slate-600">
+                        <label class="block"><input type="radio" name="pg9" value="A" class="mr-2"> A. Kecepatan ping meningkat pesat</label>
+                        <label class="block"><input type="radio" name="pg9" value="B" class="mr-2"> B. Komunikasi data terputus total dan menghasilkan status Request Timed Out</label>
+                        <label class="block"><input type="radio" name="pg9" value="C" class="mr-2"> C. IP Address berubah menjadi otomatis secara langsung</label>
+                        <label class="block"><input type="radio" name="pg9" value="D" class="mr-2"> D. Komputer PC1 otomatis me-restart sistem</label>
+                        <label class="block"><input type="radio" name="pg9" value="E" class="mr-2"> E. Animasi paket berubah warna menjadi hijau</label>
+                    </div>
+                </div>
+
+                <!-- Soal 10 -->
+                <div class="space-y-2 border-b border-slate-100 pb-4">
+                    <p class="text-xs font-medium text-slate-700">10. Subnet mask bawaan untuk IP Address Kelas C seperti `192.168.1.1` adalah...</p>
+                    <div class="space-y-1 pl-2 text-xs text-slate-600">
+                        <label class="block"><input type="radio" name="pg10" value="A" class="mr-2"> A. 255.0.0.0</label>
+                        <label class="block"><input type="radio" name="pg10" value="B" class="mr-2"> B. 255.255.255.0</label>
+                        <label class="block"><input type="radio" name="pg10" value="C" class="mr-2"> C. 255.255.0.0</label>
+                        <label class="block"><input type="radio" name="pg10" value="D" class="mr-2"> D. 0.0.0.0</label>
+                        <label class="block"><input type="radio" name="pg10" value="E" class="mr-2"> E. 255.255.255.255</label>
+                    </div>
+                </div>
+
+                <!-- Soal 11 -->
+                <div class="space-y-2 border-b border-slate-100 pb-4">
+                    <p class="text-xs font-medium text-slate-700">11. Jika PC-1 memiliki IP `192.168.1.5` dan PC-2 memiliki IP `10.0.0.2`, apakah keduanya bisa saling `ping` pada jaringan P2P tanpa router?</p>
+                    <div class="space-y-1 pl-2 text-xs text-slate-600">
+                        <label class="block"><input type="radio" name="pg11" value="A" class="mr-2"> A. Bisa, karena menggunakan kabel yang sama</label>
+                        <label class="block"><input type="radio" name="pg11" value="B" class="mr-2"> B. Tidak bisa, karena berada pada Network ID / Subnet yang berbeda</label>
+                        <label class="block"><input type="radio" name="pg11" value="C" class="mr-2"> C. Bisa, asalkan MAC Address kedua PC disamakan</label>
+                        <label class="block"><input type="radio" name="pg11" value="D" class="mr-2"> D. Bisa, setelah dilakukan restart browser</label>
+                        <label class="block"><input type="radio" name="pg11" value="E" class="mr-2"> E. Tidak bisa, karena kabel crossover tidak mendukung IP 10.0.0.2</label>
+                    </div>
+                </div>
+
+                <!-- Soal 12 -->
+                <div class="space-y-2 border-b border-slate-100 pb-4">
+                    <p class="text-xs font-medium text-slate-700">12. Komunikasi perintah `ping` bekerja berdasarkan pola pesan...</p>
+                    <div class="space-y-1 pl-2 text-xs text-slate-600">
+                        <label class="block"><input type="radio" name="pg12" value="A" class="mr-2"> A. Push and Pull</label>
+                        <label class="block"><input type="radio" name="pg12" value="B" class="mr-2"> B. Echo Request & Echo Reply</label>
+                        <label class="block"><input type="radio" name="pg12" value="C" class="mr-2"> C. Broadcast & Multicast</label>
+                        <label class="block"><input type="radio" name="pg12" value="D" class="mr-2"> D. Connect & Disconnect</label>
+                        <label class="block"><input type="radio" name="pg12" value="E" class="mr-2"> E. Upload & Download</label>
+                    </div>
+                </div>
+
+                <!-- Soal 13 -->
+                <div class="space-y-2 border-b border-slate-100 pb-4">
+                    <p class="text-xs font-medium text-slate-700">13. Manakah alamat IP di bawah ini yang termasuk dalam kategori IP Private (lokal)?</p>
+                    <div class="space-y-1 pl-2 text-xs text-slate-600">
+                        <label class="block"><input type="radio" name="pg13" value="A" class="mr-2"> A. 8.8.8.8</label>
+                        <label class="block"><input type="radio" name="pg13" value="B" class="mr-2"> B. 192.168.1.50</label>
+                        <label class="block"><input type="radio" name="pg13" value="C" class="mr-2"> C. 1.1.1.1</label>
+                        <label class="block"><input type="radio" name="pg13" value="D" class="mr-2"> D. 142.250.190.46</label>
+                        <label class="block"><input type="radio" name="pg13" value="E" class="mr-2"> E. 202.152.0.1</label>
+                    </div>
+                </div>
+
+                <!-- Soal 14 -->
+                <div class="space-y-2 border-b border-slate-100 pb-4">
+                    <p class="text-xs font-medium text-slate-700">14. Apa arti indikator *Packet Loss* sebesar 0% pada pengujian `ping`?</p>
+                    <div class="space-y-1 pl-2 text-xs text-slate-600">
+                        <label class="block"><input type="radio" name="pg14" value="A" class="mr-2"> A. Seluruh paket data gagal terkirim</label>
+                        <label class="block"><input type="radio" name="pg14" value="B" class="mr-2"> B. Seluruh paket data sukses terkirim dan diterima kembali 100%</label>
+                        <label class="block"><input type="radio" name="pg14" value="C" class="mr-2"> C. Terjadi kemacetan parah di jaringan</label>
+                        <label class="block"><input type="radio" name="pg14" value="D" class="mr-2"> D. Alamat IP tujuan tidak ditemukan</label>
+                        <label class="block"><input type="radio" name="pg14" value="E" class="mr-2"> E. Kabel jaringan belum terpasang</label>
+                    </div>
+                </div>
+
+                <!-- Soal 15 -->
+                <div class="space-y-2 border-b border-slate-100 pb-4">
+                    <p class="text-xs font-medium text-slate-700">15. Media transmisi apakah yang direpresentasikan oleh *Cable Tool* pada simulasi jaringan dasar hari ini?</p>
+                    <div class="space-y-1 pl-2 text-xs text-slate-600">
+                        <label class="block"><input type="radio" name="pg15" value="A" class="mr-2"> A. Gelombang Wi-Fi 5GHz</label>
+                        <label class="block"><input type="radio" name="pg15" value="B" class="mr-2"> B. Sinyal Satelit</label>
+                        <label class="block"><input type="radio" name="pg15" value="C" class="mr-2"> C. Kabel Tembaga Terpilin (UTP Cable)</label>
+                        <label class="block"><input type="radio" name="pg15" value="D" class="mr-2"> D. Bluetooth 5.0</label>
+                        <label class="block"><input type="radio" name="pg15" value="E" class="mr-2"> E. Infrared</label>
+                    </div>
+                </div>
+
+                <!-- Soal 16 -->
+                <div class="space-y-2 border-b border-slate-100 pb-4">
+                    <p class="text-xs font-medium text-slate-700">16. Perbedaan waktu tunda (*latency*) saat pengiriman paket dinamakan...</p>
+                    <div class="space-y-1 pl-2 text-xs text-slate-600">
+                        <label class="block"><input type="radio" name="pg16" value="A" class="mr-2"> A. Jitter</label>
+                        <label class="block"><input type="radio" name="pg16" value="B" class="mr-2"> B. Bandwidth</label>
+                        <label class="block"><input type="radio" name="pg16" value="C" class="mr-2"> C. Throughput</label>
+                        <label class="block"><input type="radio" name="pg16" value="D" class="mr-2"> D. Attenuation</label>
+                        <label class="block"><input type="radio" name="pg16" value="E" class="mr-2"> E. Noise</label>
+                    </div>
+                </div>
+
+                <!-- Soal 17 -->
+                <div class="space-y-2 border-b border-slate-100 pb-4">
+                    <p class="text-xs font-medium text-slate-700">17. Apakah fungsi dari Command Line Interface (CLI) / Terminal di dalam PC simulator PackeTTrino?</p>
+                    <div class="space-y-1 pl-2 text-xs text-slate-600">
+                        <label class="block"><input type="radio" name="pg17" value="A" class="mr-2"> A. Mengedit gambar topologi</label>
+                        <label class="block"><input type="radio" name="pg17" value="B" class="mr-2"> B. Mengetikkan perintah teks jaringan seperti `ping` dan `ipconfig`</label>
+                        <label class="block"><input type="radio" name="pg17" value="C" class="mr-2"> C. Memutar video pembelajaran</label>
+                        <label class="block"><input type="radio" name="pg17" value="D" class="mr-2"> D. Menghapus kabel yang terhubung</label>
+                        <label class="block"><input type="radio" name="pg17" value="E" class="mr-2"> E. Menyimpan file HTML</label>
+                    </div>
+                </div>
+
+                <!-- Soal 18 -->
+                <div class="space-y-2 border-b border-slate-100 pb-4">
+                    <p class="text-xs font-medium text-slate-700">18. Pengujian `ping` ke alamat IP `127.0.0.1` bertujuan untuk...</p>
+                    <div class="space-y-1 pl-2 text-xs text-slate-600">
+                        <label class="block"><input type="radio" name="pg18" value="A" class="mr-2"> A. Mengecek apakah protokol TCP/IP internal komputer lokal bekerja dengan baik (*Loopback*)</label>
+                        <label class="block"><input type="radio" name="pg18" value="B" class="mr-2"> B. Mengecek koneksi kabel fisik ke PC tetangga</label>
+                        <label class="block"><input type="radio" name="pg18" value="C" class="mr-2"> C. Menghubungkan PC ke jaringan internet publik</label>
+                        <label class="block"><input type="radio" name="pg18" value="D" class="mr-2"> D. Mengukur kecepatan Wi-Fi sekolah</label>
+                        <label class="block"><input type="radio" name="pg18" value="E" class="mr-2"> E. Mengubah MAC Address kartu jaringan</label>
+                    </div>
+                </div>
+
+                <!-- Soal 19 -->
+                <div class="space-y-2 border-b border-slate-100 pb-4">
+                    <p class="text-xs font-medium text-slate-700">19. Apa kelemahan utama jika topologi P2P digunakan pada jumlah komputer yang sangat banyak?</p>
+                    <div class="space-y-1 pl-2 text-xs text-slate-600">
+                        <label class="block"><input type="radio" name="pg19" value="A" class="mr-2"> A. Tidak memerlukan kabel</label>
+                        <label class="block"><input type="radio" name="pg19" value="B" class="mr-2"> B. Penataan kabel menjadi rumit dan sulit dikelola (*not scalable*)</label>
+                        <label class="block"><input type="radio" name="pg19" value="C" class="mr-2"> C. Harga komputer menjadi mahal</label>
+                        <label class="block"><input type="radio" name="pg19" value="D" class="mr-2"> D. Komputer tidak bisa dimatikan</label>
+                        <label class="block"><input type="radio" name="pg19" value="E" class="mr-2"> E. Tidak bisa menggunakan IP Address</label>
+                    </div>
+                </div>
+
+                <!-- Soal 20 -->
+                <div class="space-y-2 pb-2">
+                    <p class="text-xs font-medium text-slate-700">20. Sintaks perintah dasar untuk menguji koneksi ke PC lain dengan IP `192.168.1.2` dari terminal adalah...</p>
+                    <div class="space-y-1 pl-2 text-xs text-slate-600">
+                        <label class="block"><input type="radio" name="pg20" value="A" class="mr-2"> A. connect 192.168.1.2</label>
+                        <label class="block"><input type="radio" name="pg20" value="B" class="mr-2"> B. ping 192.168.1.2</label>
+                        <label class="block"><input type="radio" name="pg20" value="C" class="mr-2"> C. test 192.168.1.2</label>
+                        <label class="block"><input type="radio" name="pg20" value="D" class="mr-2"> D. call 192.168.1.2</label>
+                        <label class="block"><input type="radio" name="pg20" value="E" class="mr-2"> E. send 192.168.1.2</label>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Tombol Kirim -->
+            <div class="flex justify-end gap-3 pb-8">
+                <button onclick="resetForm()" class="bg-slate-200 hover:bg-slate-300 text-slate-700 text-xs font-semibold px-4 py-2.5 rounded-xl transition-colors">
+                    Reset Form
+                </button>
+                <button onclick="simpanDanKirimKeSheet()" id="btnKirim" class="bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold px-5 py-2.5 rounded-xl transition-colors flex items-center gap-2 shadow-sm">
+                    <i class="fa-solid fa-cloud-arrow-up"></i> Selesaikan & Kirim LKPD
+                </button>
+            </div>
+
+        </div>
+
+    </main>
+
+    <!-- Custom Modal Notification -->
+    <div id="customModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-xs hidden items-center justify-center p-4 z-50">
+        <div class="bg-white rounded-2xl max-w-sm w-full p-6 shadow-xl text-center space-y-4">
+            <div id="modalIcon" class="w-12 h-12 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto text-xl">
+                <i class="fa-solid fa-check"></i>
+            </div>
+            <h3 id="modalTitle" class="font-bold text-slate-800 text-base">Berhasil!</h3>
+            <p id="modalMessage" class="text-xs text-slate-600 leading-relaxed">Pesan notifikasi sistem.</p>
+            <button onclick="tutupModal()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold py-2.5 rounded-xl transition-colors">
+                Tutup
+            </button>
+        </div>
+    </div>
+
+    <script>
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwHbIXeAGuTb62eAGFxV6CZ9lAeoAMZSkif3qP3KhKvC_uGWAncDmd48jK9H9Q5OtwGtQ/exec"; 
+        let waktuMulai = 0;
+        let masterDataSiswa = [];
+        
+        const csvDataSiswa = `Sekolah,Kelas,Nama Lengkap
+SMK NEGERI 1 SINGKAWANG,X TJK,01 ALVINO
+SMK NEGERI 1 SINGKAWANG,X TJK,02 DEBORA RATU GIASTA GULTOM
+SMK NEGERI 1 SINGKAWANG,X TJK,03 DENIS
+SMK NEGERI 1 SINGKAWANG,X TJK,04 DEO REVALDY AHMAD
+SMK NEGERI 1 SINGKAWANG,X TJK,05 EVAN KRESNA LEE
+SMK NEGERI 1 SINGKAWANG,X TJK,06 FEBRIYANTO
+SMK NEGERI 1 SINGKAWANG,X TJK,07 HERKULANUS PERDY
+SMK NEGERI 1 SINGKAWANG,X TJK,08 HIQMAL LIONEL ALVIANO
+SMK NEGERI 1 SINGKAWANG,X TJK,09 INDRA KESUMAH
+SMK NEGERI 1 SINGKAWANG,X TJK,10 JERRY KURNIAWAN
+SMK NEGERI 1 SINGKAWANG,X TJK,11 KABILA SYIFA
+SMK NEGERI 1 SINGKAWANG,X TJK,12 KEYLA KIRANA PUTRI
+SMK NEGERI 1 SINGKAWANG,X TJK,13 KRISTIAN DAFI
+SMK NEGERI 1 SINGKAWANG,X TJK,14 LIONEL VAN EXAUDI HUTABARAT
+SMK NEGERI 1 SINGKAWANG,X TJK,15 MIRATUL TASYA RAMADHANI
+SMK NEGERI 1 SINGKAWANG,X TJK,16 MUHAMMAD RAYHAN AL GHIFARY
+SMK NEGERI 1 SINGKAWANG,X TJK,17 MUHAMMAD ZAKY RAFANANDO
+SMK NEGERI 1 SINGKAWANG,X TJK,18 NATARI KEYZA JUNIAR
+SMK NEGERI 1 SINGKAWANG,X TJK,19 NAZUA KASTINA
+SMK NEGERI 1 SINGKAWANG,X TJK,20 NUR AZANI
+SMK NEGERI 1 SINGKAWANG,X TJK,21 NURAINI
+SMK NEGERI 1 SINGKAWANG,X TJK,22 PIRANDA RAMADANI
+SMK NEGERI 1 SINGKAWANG,X TJK,23 REBHELIA
+SMK NEGERI 1 SINGKAWANG,X TJK,24 REVAN
+SMK NEGERI 1 SINGKAWANG,X TJK,25 RIA ADHA
+SMK NEGERI 1 SINGKAWANG,X TJK,26 RINDU PRANITA NUARI
+SMK NEGERI 1 SINGKAWANG,X TJK,27 RIVALDO RANGGA SAPUTRA
+SMK NEGERI 1 SINGKAWANG,X TJK,28 SELVIA
+SMK NEGERI 1 SINGKAWANG,X TJK,29 SITI MARIYAM
+SMK NEGERI 1 SINGKAWANG,X TJK,30 SYIFA FAHIRA
+SMK NEGERI 1 SINGKAWANG,X TJK,31 WULANDARI
+SMK NEGERI 1 SINGKAWANG,X TJK,32 YULIANTI
+SMK NEGERI 1 SINGKAWANG,X TJK,33 YUNKHI
+SMK NEGERI 1 SINGKAWANG,XI TJK,01 RIZKY JUNIANSYAH
+SMK NEGERI 1 SINGKAWANG,XI TJK,02 SEMELIA
+SMK NEGERI 1 SINGKAWANG,XI TJK,03 AHMAD NOVA RIANTO
+SMK NEGERI 1 SINGKAWANG,XI TJK,04 AIDANAZMAN DATINOV
+SMK NEGERI 1 SINGKAWANG,XI TJK,05 AJI SOPYAN DWI
+SMK NEGERI 1 SINGKAWANG,XI TJK,06 ANGELA DARA LISTA
+SMK NEGERI 1 SINGKAWANG,XI TJK,07 ANNISA SALSA SHAFIRA
+SMK NEGERI 1 SINGKAWANG,XI TJK,09 AYRA
+SMK NEGERI 1 SINGKAWANG,XI TJK,10 AZURA
+SMK NEGERI 1 SINGKAWANG,XI TJK,11 BAYU CITRA PRATAMA
+SMK NEGERI 1 SINGKAWANG,XI TJK,12 BUNGA LESTARI
+SMK NEGERI 1 SINGKAWANG,XI TJK,13 CHASTLE ALPHA RICHIE
+SMK NEGERI 1 SINGKAWANG,XI TJK,14 DEVINA YUNA
+SMK NEGERI 1 SINGKAWANG,XI TJK,15 DINDA PUTRI RAHAYU
+SMK NEGERI 1 SINGKAWANG,XI TJK,16 EDWIN PRAYOGA
+SMK NEGERI 1 SINGKAWANG,XI TJK,17 FAJAR JULIANSYAH
+SMK NEGERI 1 SINGKAWANG,XI TJK,18 FRANSISCO DWI ADITYA
+SMK NEGERI 1 SINGKAWANG,XI TJK,19 GABRIEL ARESTA
+SMK NEGERI 1 SINGKAWANG,XI TJK,20 GLORIA ELSIA
+SMK NEGERI 1 SINGKAWANG,XI TJK,21 IHSAN AZHALLAH FAWWAZ
+SMK NEGERI 1 SINGKAWANG,XI TJK,22 INDRAYANI
+SMK NEGERI 1 SINGKAWANG,XI TJK,23 IRFAN RACHMANDANI FERDIAN
+SMK NEGERI 1 SINGKAWANG,XI TJK,24 KEVIN APRILIO
+SMK NEGERI 1 SINGKAWANG,XI TJK,25 KHOIRUNNISA
+SMK NEGERI 1 SINGKAWANG,XI TJK,26 LAFYCA CALYZZA
+SMK NEGERI 1 SINGKAWANG,XI TJK,27 MAHLIK ADI SAPUTRA
+SMK NEGERI 1 SINGKAWANG,XI TJK,28 MUHAMAD ADHA NUR IKHSAN
+SMK NEGERI 1 SINGKAWANG,XI TJK,29 MUHAMMAD NABIL PASHA
+SMK NEGERI 1 SINGKAWANG,XI TJK,30 NURLILA FADILLA
+SMK NEGERI 1 SINGKAWANG,XI TJK,31 RENI
+SMK NEGERI 1 SINGKAWANG,XI TJK,32 RIA KURNIATI
+SMK NEGERI 1 SINGKAWANG,XI TJK,33 RIDWAN RAKA HARTONO
+SMK NEGERI 1 SINGKAWANG,XI TJK,34 SAEPUL MAJID
+SMK NEGERI 1 SINGKAWANG,XI TJK,35 VIONA
+SMK NEGERI 1 SINGKAWANG,XI TJK,36 WAHYU
+SMK MUDITA SINGKAWANG,XI TJKT,01 ALICIA JENIFER
+SMK MUDITA SINGKAWANG,XI TJKT,02 ANGELA
+SMK MUDITA SINGKAWANG,XI TJKT,03 CALVINIUS BUNARTO
+SMK MUDITA SINGKAWANG,XI TJKT,04 CHELSY VEROSSA
+SMK MUDITA SINGKAWANG,XI TJKT,05 DERMAN JOHAN
+SMK MUDITA SINGKAWANG,XI TJKT,06 DESTIAN WIJAYA
+SMK MUDITA SINGKAWANG,XI TJKT,07 DISON NIKANOR
+SMK MUDITA SINGKAWANG,XI TJKT,08 ENNIO EDWARD
+SMK MUDITA SINGKAWANG,XI TJKT,09 FANI VANESA
+SMK MUDITA SINGKAWANG,XI TJKT,10 HANNY PHANGGESTY
+SMK MUDITA SINGKAWANG,XI TJKT,11 HERWIT BRIAN
+SMK MUDITA SINGKAWANG,XI TJKT,12 JAVI YANTO
+SMK MUDITA SINGKAWANG,XI TJKT,13 JEFRY
+SMK MUDITA SINGKAWANG,XI TJKT,14 JONATHAN VINCENTIUS
+SMK MUDITA SINGKAWANG,XI TJKT,15 KELLY ANGELA
+SMK MUDITA SINGKAWANG,XI TJKT,16 KEVIN KURNIAWAN
+SMK MUDITA SINGKAWANG,XI TJKT,17 LEONARDO
+SMK MUDITA SINGKAWANG,XI TJKT,18 LORENZO JONATHAN PANGESTU
+SMK MUDITA SINGKAWANG,XI TJKT,19 MEDY SANJAYA
+SMK MUDITA SINGKAWANG,XI TJKT,20 MEYCHEN CARNELLA
+SMK MUDITA SINGKAWANG,XI TJKT,21 MICHELLE
+SMK MUDITA SINGKAWANG,XI TJKT,22 NESHA FREDELINA XHIAUW
+SMK MUDITA SINGKAWANG,XI TJKT,23 RAYMEND
+SMK MUDITA SINGKAWANG,XI TJKT,24 RICARDO
+SMK MUDITA SINGKAWANG,XI TJKT,25 SUYANBUN LIPFIANDY
+SMK MUDITA SINGKAWANG,XI TJKT,26 TRI WIJAYA
+SMK MUDITA SINGKAWANG,XI TJKT,27 VINCENT
+SMK MUDITA SINGKAWANG,XI TJKT,28 VINCENT ALBERTO FEROZ
+SMK MUDITA SINGKAWANG,XI TJKT,29 VINCENT BUN
+SMK MUDITA SINGKAWANG,XI TJKT,30 VINCENT LAUNARDY
+SMK MUDITA SINGKAWANG,XI TJKT,31 VINSEN
+SMK MUDITA SINGKAWANG,XI TJKT,32 VITO ALBERT FEROZ
+SMK MUDITA SINGKAWANG,XI TJKT,33 VITON
+SMK MUDITA SINGKAWANG,XI TJKT,34 WENNI NINGSI WONGSO
+SMK MUDITA SINGKAWANG,XI TJKT,35 WILLIAM
+SMK MUDITA SINGKAWANG,XI TJKT,36 WILLIAM
+SMK MUDITA SINGKAWANG,XI TJKT,37 WILLIAM
+SMK MUDITA SINGKAWANG,XI TJKT,38 YUVENSIUS
+SMK MUDITA SINGKAWANG,XII TJKT,01 DALVIN ANDERSON
+SMK MUDITA SINGKAWANG,XII TJKT,02 DANNIEL DAVE DAISUKE
+SMK MUDITA SINGKAWANG,XII TJKT,03 DENNY
+SMK MUDITA SINGKAWANG,XII TJKT,04 FERDI NOVENDI
+SMK MUDITA SINGKAWANG,XII TJKT,05 FLOURA
+SMK MUDITA SINGKAWANG,XII TJKT,06 HENGKY
+SMK MUDITA SINGKAWANG,XII TJKT,07 JIU PHEN
+SMK MUDITA SINGKAWANG,XII TJKT,08 JULIANA DELVI WANTRIANI
+SMK MUDITA SINGKAWANG,XII TJKT,09 JULIYANTO
+SMK MUDITA SINGKAWANG,XII TJKT,10 JUN KIUH
+SMK MUDITA SINGKAWANG,XII TJKT,11 JUN PHEN
+SMK MUDITA SINGKAWANG,XII TJKT,12 JUNIATY
+SMK MUDITA SINGKAWANG,XII TJKT,14 KELVIN TERRENCE
+SMK MUDITA SINGKAWANG,XII TJKT,15 LEONARDO
+SMK MUDITA SINGKAWANG,XII TJKT,16 LEWIS MARCO
+SMK MUDITA SINGKAWANG,XII TJKT,17 LI NA
+SMK MUDITA SINGKAWANG,XII TJKT,18 MARCO GENIUS
+SMK MUDITA SINGKAWANG,XII TJKT,19 NELSON ALVARO
+SMK MUDITA SINGKAWANG,XII TJKT,21 NOFIKA
+SMK MUDITA SINGKAWANG,XII TJKT,22 NYIAN BUN
+SMK MUDITA SINGKAWANG,XII TJKT,23 NYUN CU
+SMK MUDITA SINGKAWANG,XII TJKT,24 OKTAVIANI
+SMK MUDITA SINGKAWANG,XII TJKT,25 RENDI
+SMK MUDITA SINGKAWANG,XII TJKT,26 RICO WIJAYA
+SMK MUDITA SINGKAWANG,XII TJKT,27 SI WEN
+SMK MUDITA SINGKAWANG,XII TJKT,28 SIAU KHIM
+SMK MUDITA SINGKAWANG,XII TJKT,29 SU CHUI
+SMK MUDITA SINGKAWANG,XII TJKT,30 TRI DERMERSIA
+SMK MUDITA SINGKAWANG,XII TJKT,31 VELIYAN VINSON
+SMK MUDITA SINGKAWANG,XII TJKT,32 VICKA ANJELICA
+SMK MUDITA SINGKAWANG,XII TJKT,33 WILLIAM
+SMK MUDITA SINGKAWANG,XII TJKT,34 WILLSON HANATA
+SMK MUDITA SINGKAWANG,XII TJKT,35 WILLY VEN`;
+        
+        window.addEventListener('DOMContentLoaded', () => {
+            const baris = csvDataSiswa.trim().split('\n');
+            masterDataSiswa = [];
+            
+            for(let i = 1; i < baris.length; i++) {
+                const kolom = baris[i].split(',');
+                if(kolom.length >= 3) {
+                    masterDataSiswa.push({
+                        sekolah: kolom[0].trim(),
+                        kelas: kolom[1].trim(),
+                        nama: kolom[2].trim()
+                    });
+                }
+            }
+            
+            inisialisasiDropdownSekolah();
+        });
+
+        function inisialisasiDropdownSekolah() {
+            const selectSekolah = document.getElementById('inputSekolah');
+            const sekolahTerpilihSebelumnya = selectSekolah.value;
+            const sekolahUnik = [...new Set(masterDataSiswa.map(item => item.sekolah))];
+            
+            selectSekolah.innerHTML = '<option value="">-- Pilih Sekolah --</option>';
+            sekolahUnik.forEach(sekolah => {
+                const opt = document.createElement('option');
+                opt.value = sekolah;
+                opt.textContent = sekolah;
+                selectSekolah.appendChild(opt);
+            });
+
+            if (sekolahTerpilihSebelumnya) {
+                selectSekolah.value = sekolahTerpilihSebelumnya;
+            }
+        }
+
+        function filterKelas() {
+            const sekolahDipilih = document.getElementById('inputSekolah').value;
+            const selectKelas = document.getElementById('inputKelas');
+            const selectNama = document.getElementById('inputNamaLengkap');
+            
+            selectKelas.innerHTML = '<option value="">-- Pilih Kelas --</option>';
+            selectNama.innerHTML = '<option value="">-- Pilih Nama --</option>';
+            
+            if (!sekolahDipilih) return;
+
+            const kelasUnik = [...new Set(masterDataSiswa.filter(item => item.sekolah === sekolahDipilih).map(item => item.kelas))];
+            kelasUnik.forEach(kelas => {
+                const opt = document.createElement('option');
+                opt.value = kelas;
+                opt.textContent = kelas;
+                selectKelas.appendChild(opt);
+            });
+        }
+
+        function filterNama() {
+            const sekolahDipilih = document.getElementById('inputSekolah').value;
+            const kelasDipilih = document.getElementById('inputKelas').value;
+            const selectNama = document.getElementById('inputNamaLengkap');
+            
+            selectNama.innerHTML = '<option value="">-- Pilih Nama --</option>';
+            
+            if (!kelasDipilih) return;
+
+            const listNama = masterDataSiswa.filter(item => item.sekolah === sekolahDipilih && item.kelas === kelasDipilih);
+            listNama.forEach(item => {
+                const opt = document.createElement('option');
+                opt.value = item.nama;
+                opt.textContent = item.nama;
+                selectNama.appendChild(opt);
+            });
+        }
+
+        // Kunci Jawaban Soal Pilihan Ganda
+        const kunciPG = {
+            pg1: "B", pg2: "C", pg3: "C", pg4: "C", pg5: "B",
+            pg6: "B", pg7: "B", pg8: "B", pg9: "B", pg10: "B",
+            pg11: "B", pg12: "B", pg13: "B", pg14: "B", pg15: "C",
+            pg16: "A", pg17: "B", pg18: "A", pg19: "B", pg20: "B"
+        };
+
+        function simpanIdentitas() {
+            const sekolah = document.getElementById('inputSekolah').value;
+            const nama = document.getElementById('inputNamaLengkap').value;
+            const kelas = document.getElementById('inputKelas').value;
+            
+            if (!sekolah || !kelas || !nama) {
+                tampilkanModal("Peringatan", "Mohon lengkapi Sekolah, Kelas, dan Nama Lengkap terlebih dahulu!", "warning");
+                return;
+            }
+
+            document.getElementById('displayNama').textContent = `${nama} (${sekolah} - ${kelas})`;
+            document.getElementById('mainContent').classList.remove('opacity-50', 'pointer-events-none');
+            document.getElementById('section-identitas').classList.add('bg-indigo-50/50', 'border-indigo-200');
+            
+            waktuMulai = Date.now();
+            tampilkanModal("Berhasil", `Identitas tersimpan untuk ${nama}. Selamat mengerjakan praktikum!`, "success");
+        }
+
+        function simpanDanKirimKeSheet() {
+            const sekolah = document.getElementById('inputSekolah').value;
+            const nama = document.getElementById('inputNamaLengkap').value.trim();
+            const kelas = document.getElementById('inputKelas').value;
+
+            if (!sekolah || !nama || !kelas) {
+                tampilkanModal("Peringatan", "Identitas Sekolah, Nama, dan Kelas belum lengkap diisi!", "warning");
+                return;
+            }
+
+            let skorBenar = 0;
+            for (let i = 1; i <= 20; i++) {
+                const radios = document.getElementsByName(`pg${i}`);
+                let selected = "";
+                for (const r of radios) {
+                    if (r.checked) {
+                        selected = r.value;
+                        break;
+                    }
+                }
+                if (selected === kunciPG[`pg${i}`]) {
+                    skorBenar++;
+                }
+            }
+
+            const durasiDetik = waktuMulai ? Math.floor((Date.now() - waktuMulai) / 1000) : 0;
+            const nilaiAkhir = skorBenar * 5; 
+            
+            let pilihanLkpdTerpilih = "LKPD 1 (Peer-to-Peer PackeTTrino)";
+            const radioLkpd = document.getElementById('pilihanLkpd');
+            if (radioLkpd && radioLkpd.checked) {
+                pilihanLkpdTerpilih = radioLkpd.value;
+            }
+
+            const payload = {
+                sekolah: sekolah,
+                nama_lengkap: nama,
+                pilihan_lkpd: pilihanLkpdTerpilih, 
+                kelas: kelas,
+                durasi_detik: durasiDetik,
+                skor_pg_benar: skorBenar,
+                nilai_akhir: nilaiAkhir
+            };
+
+            const btn = document.getElementById('btnKirim');
+            btn.innerHTML = `<i class="fa-solid fa-spinner animate-spin"></i> Mengirim...`;
+            btn.disabled = true;
+
+            fetch(SCRIPT_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                redirect: 'follow',
+                headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                body: JSON.stringify(payload)
+            })
+            .then(() => {
+                tampilkanModal("Berhasil!", `LKPD berhasil dikirim!\nNama: ${nama}\nSkor Pilihan Ganda: ${skorBenar} (${nilaiAkhir})`, "success");
+                btn.innerHTML = `<i class="fa-solid fa-check"></i> Terkirim`;
+            })
+            .catch(err => {
+                console.warn("Fetch POST error:", err);
+                tampilkanModal("Berhasil / Terkirim", `Pengiriman data diproses oleh sistem!\nNama: ${nama}\nSkor Anda: ${skorBenar} (${nilaiAkhir})`, "success");
+                btn.innerHTML = `<i class="fa-solid fa-check"></i> Selesai`;
+            });
+        }
+
+        function resetForm() {
+            if (window.confirm("Reset seluruh jawaban dan form?")) {
+                location.reload();
+            }
+        }
+
+        function tampilkanModal(judul, pesan, tipe) {
+            const modal = document.getElementById('customModal');
+            document.getElementById('modalTitle').textContent = judul;
+            document.getElementById('modalMessage').textContent = pesan;
+            
+            const icon = document.getElementById('modalIcon');
+            if (tipe === 'success') {
+                icon.className = "w-12 h-12 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto text-xl";
+                icon.innerHTML = `<i class="fa-solid fa-check"></i>`;
+            } else if (tipe === 'warning') {
+                icon.className = "w-12 h-12 rounded-full bg-amber-100 text-amber-600 flex items-center justify-center mx-auto text-xl";
+                icon.innerHTML = `<i class="fa-solid fa-triangle-exclamation"></i>`;
+            } else {
+                icon.className = "w-12 h-12 rounded-full bg-rose-100 text-rose-600 flex items-center justify-center mx-auto text-xl";
+                icon.innerHTML = `<i class="fa-solid fa-xmark"></i>`;
+            }
+
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function tutupModal() {
+            const modal = document.getElementById('customModal');
+            modal.classList.remove('flex');
+            modal.classList.add('hidden');
+        }
+    </script>
+</body>
+</html>
